@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono); */
+  --font-raleway: var(--font-raleway);
+  --font-ralewayDots: var(--font-ralewayDots);
+}
+
+/* Utility classes */
+.font-sans {
+  font-family: var(--font-sans), sans-serif; /* Raleway */
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace; /* Fira Code */
+}
+
+.font-raleway {
+  font-family: var(--font-raleway); /* Raleway */
+}
+
+.font-ralewayDots {
+  font-family: var(--font-ralewayDots); /* Raleway Dots */
+}
