@@ -2,6 +2,7 @@
 
 import NextLink from "next/link";
 import Image from "next/image";
+
 import image from "@/src/assets/images/team.png";
 
 const Team = () => {
@@ -20,15 +21,15 @@ const Team = () => {
           {/* Team Member 1 */}
           <div className="flex flex-col justify-center m-8 text-center">
             <NextLink
-              href="https://unsplash.com/photos/a-woman-wearing-glasses-is-smiling-while-looking-at-a-laptop-4owZdafVgOk"
               passHref
+              href="https://unsplash.com/photos/a-woman-wearing-glasses-is-smiling-while-looking-at-a-laptop-4owZdafVgOk"
             >
               <Image
                 alt="Leroy Jenkins"
                 className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full dark:bg-gray-500"
+                height={96}
                 src={image}
                 width={96}
-                height={96}
               />
             </NextLink>
             <p className="text-xl font-semibold leading-tight">Leroy Jenkins</p>
@@ -40,9 +41,9 @@ const Team = () => {
             <Image
               alt="Team Member 2"
               className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full dark:bg-gray-500"
+              height={96}
               src={image}
               width={96}
-              height={96}
             />
             <p className="text-xl font-semibold leading-tight">Leroy Jenkins</p>
             <p className="dark:text-gray-600">Visual Designer</p>
@@ -52,9 +53,9 @@ const Team = () => {
             <Image
               alt="Team Member 3"
               className="self-center flex-shrink-0 w-24 h-24 mb-4 bg-center bg-cover rounded-full dark:bg-gray-500"
+              height={96}
               src={image}
               width={96}
-              height={96}
             />
             <p className="text-xl font-semibold leading-tight">Leroy Jenkins</p>
             <p className="dark:text-gray-600">Visual Designer</p>

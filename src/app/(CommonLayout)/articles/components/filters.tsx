@@ -6,7 +6,7 @@ interface FiltersProps {
   onFilter: (
     searchTerm: string,
     selectedCategory: string,
-    selectedAuthor: string
+    selectedAuthor: string,
   ) => void;
 }
 
@@ -17,18 +17,21 @@ const Filters: React.FC<FiltersProps> = ({ categories, authors, onFilter }) => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
+
     setSearchTerm(term);
     onFilter(term, selectedCategory, selectedAuthor); // Call onFilter with updated values
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value;
+
     setSelectedCategory(category);
     onFilter(searchTerm, category, selectedAuthor); // Call onFilter with updated values
   };
 
   const handleAuthorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const author = e.target.value;
+
     setSelectedAuthor(author);
     onFilter(searchTerm, selectedCategory, author); // Call onFilter with updated values
   };
@@ -36,16 +39,16 @@ const Filters: React.FC<FiltersProps> = ({ categories, authors, onFilter }) => {
   return (
     <div className="flex flex-col md:flex-row md:justify-between mb-8">
       <input
-        type="text"
+        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
         placeholder="Search articles..."
+        type="text"
         value={searchTerm}
         onChange={handleSearchChange}
-        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
       />
       <select
+        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
         value={selectedCategory}
         onChange={handleCategoryChange}
-        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
       >
         <option value="">All Categories</option>
         {categories.map((category) => (
@@ -55,9 +58,9 @@ const Filters: React.FC<FiltersProps> = ({ categories, authors, onFilter }) => {
         ))}
       </select>
       <select
+        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
         value={selectedAuthor}
         onChange={handleAuthorChange}
-        className="mb-4 md:mb-0 md:w-1/3 px-4 py-2 border rounded"
       >
         <option value="">All Authors</option>
         {authors.map((author) => (

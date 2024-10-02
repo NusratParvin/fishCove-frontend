@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image"; // Import Image from Next.js
 import NextLink from "next/link";
 import { Skeleton } from "@nextui-org/react"; // Import Skeleton from NextUI
+
 import Filters from "./components/filters";
 
 const articles = [
@@ -30,24 +31,24 @@ export default function BlogPage() {
   const handleFilter = (
     searchTerm: string,
     selectedCategory: string,
-    selectedAuthor: string
+    selectedAuthor: string,
   ) => {
     setLoading(true);
     let filtered = articles;
 
     if (typeof searchTerm === "string" && searchTerm.trim() !== "") {
       filtered = filtered.filter((article) =>
-        article.title.toLowerCase().includes(searchTerm.toLowerCase())
+        article.title.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
     if (selectedCategory) {
       filtered = filtered.filter(
-        (article) => article.category === selectedCategory
+        (article) => article.category === selectedCategory,
       );
     }
     if (selectedAuthor) {
       filtered = filtered.filter(
-        (article) => article.author === selectedAuthor
+        (article) => article.author === selectedAuthor,
       );
     }
 
@@ -60,8 +61,8 @@ export default function BlogPage() {
       <div className="mx-auto max-w-screen-xl px-4 md:px-8">
         {/* Filters */}
         <Filters
-          categories={categories}
           authors={authors}
+          categories={categories}
           onFilter={handleFilter} // Call onFilter directly on input change
         />
 
@@ -78,14 +79,14 @@ export default function BlogPage() {
                 key={article.id}
                 className="flex flex-col items-center gap-4 md:flex-row lg:gap-6"
               >
-                <NextLink href={`/articles/${article.id}`} passHref>
+                <NextLink passHref href={`/articles/${article.id}`}>
                   <div className="group relative block h-56 w-full shrink-0 self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
                     <Image
-                      src={article.image}
-                      loading="lazy"
                       alt={article.title}
-                      layout="fill" // Use layout="fill" for absolute positioning
                       className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                      layout="fill" // Use layout="fill" for absolute positioning
+                      loading="lazy"
+                      src={article.image}
                     />
                   </div>
                 </NextLink>
@@ -93,7 +94,7 @@ export default function BlogPage() {
                 <div className="flex flex-col gap-2">
                   <span className="text-sm text-gray-400">{article.date}</span>
                   <h2 className="text-xl font-bold text-gray-800">
-                    <NextLink href={`/articles/${article.id}`} passHref>
+                    <NextLink passHref href={`/articles/${article.id}`}>
                       <span className="transition duration-100 hover:text-rose-500 active:text-rose-600">
                         {article.title}
                       </span>
@@ -101,7 +102,7 @@ export default function BlogPage() {
                   </h2>
                   <p className="text-gray-500">{article.description}</p>
                   <div>
-                    <NextLink href={`/articles/${article.id}`} passHref>
+                    <NextLink passHref href={`/articles/${article.id}`}>
                       <span className="font-semibold text-rose-500 transition duration-100 hover:text-rose-600 active:text-rose-700">
                         Read more
                       </span>
