@@ -5,15 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import image from "@/src/assets/images/Fish-logo-template-on-transparent-background-PNG.png";
 import { useAppDispatch } from "@/src/redux/hooks";
-import { useLoginMutation } from "@/src/redux/features/auth/authApi";
+import {
+  useForgetPasswordMutation,
+  useLoginMutation,
+} from "@/src/redux/features/auth/authApi";
 import { setUser } from "@/src/redux/features/auth/authSlice";
-import { toast } from "sonner";
 import { verifyToken } from "@/src/lib/verifyToken";
-import { IUserJwtPayload, TUserRole } from "@/src/types";
-import { useRouter } from "next/navigation";
+import { IUserJwtPayload } from "@/src/types";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +30,7 @@ const Login = () => {
   } = useForm<FieldValues>();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [forgetPassword, { isLoading }] = useForgetPasswordMutation();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -35,10 +39,12 @@ const Login = () => {
   const onSubmit = async (data: any) => {
     // Display loading toast
     const toastId = toast.loading("Logging in...");
+
     console.log(data);
 
     try {
       const res = await login(data).unwrap();
+
       console.log(res);
 
       if (res.statusCode === 200) {
@@ -72,6 +78,21 @@ const Login = () => {
           className: "bg-red-700 text-white",
         });
       }
+    }
+  };
+
+  const handleForgetPassword = async (email: string) => {
+    try {
+      const result = await forgetPassword(email).unwrap();
+
+      if (result.success) {
+        toast.success("Reset link sent to your email!");
+        // Forward user to a confirmation page (pass email as a query param)
+        router.push(`/forgot-password?email=${email}`);
+      }
+    } catch (error) {
+      toast.error("Failed to send reset email. Please try again.");
+      console.error("Error sending reset email:", error);
     }
   };
 

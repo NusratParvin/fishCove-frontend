@@ -3,10 +3,7 @@ import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import Image from "next/image";
 
-import { adminLinks, userLinks } from "./constants";
-
 // import { useUser } from "@/src/context/user.provider";
-import { SidebarOptions } from "./sidebarOptions";
 
 const Sidebar = () => {
   // const { user } = useUser();

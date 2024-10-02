@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+
 import { verifyToken } from "./lib/verifyToken";
 
 const AuthRoutes = ["/login", "/register"];
@@ -21,7 +22,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, request.url)
+        new URL(`/login?redirect=${pathname}`, request.url),
       );
     }
   }
@@ -34,7 +35,7 @@ export async function middleware(request: NextRequest) {
     console.error("Token verification failed:", error);
 
     return NextResponse.redirect(
-      new URL(`/login?redirect=${pathname}`, request.url)
+      new URL(`/login?redirect=${pathname}`, request.url),
     );
   }
 

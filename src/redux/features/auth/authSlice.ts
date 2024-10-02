@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+// import Cookies from "js-cookie";
 
 import { RootState } from "../../store";
+
 import { TUserRole } from "@/src/types";
-import Cookies from "js-cookie";
 
 // export type TUser = {
 //   email: string;
@@ -44,8 +45,9 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      Cookies.remove("accessToken");
-      Cookies.remove("refreshToken");
+
+      // Cookies.remove("accessToken", { path: "/" });
+      // Cookies.remove("refreshToken", { path: "/" });
     },
   },
 });

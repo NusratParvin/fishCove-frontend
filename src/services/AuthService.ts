@@ -1,4 +1,6 @@
-// "use server";
+"use server";
+
+import { cookies } from "next/headers";
 
 // import { cookies } from "next/headers";
 // import { FieldValues } from "react-hook-form";
@@ -33,10 +35,12 @@
 //   }
 // };
 
-// export const logout = () => {
-//   cookies().delete("accessToken");
-//   cookies().delete("refreshToken");
-// };
+export const logoutCookies = () => {
+  cookies().delete("accessToken");
+  cookies().delete("refreshToken");
+
+  return { success: true };
+};
 
 // export const getCurrentUser = () => {
 //   const accessToken = cookies().get("accessToken")?.value;

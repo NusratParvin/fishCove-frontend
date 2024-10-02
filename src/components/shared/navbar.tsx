@@ -9,19 +9,18 @@ import {
 import { Link } from "@nextui-org/link";
 import {
   Avatar,
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { siteConfig } from "@/src/config/site";
-import { useGetUserInfoQuery } from "@/src/redux/features/user/userApi";
-import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { logout, useCurrentUser } from "@/src/redux/features/auth/authSlice";
-import { TUserRole } from "@/src/types";
+import { logoutCookies } from "@/src/services/AuthService";
 
 // import { ThemeSwitch } from "@/src/components/theme-switch";
 
@@ -32,9 +31,25 @@ export const Navbar = () => {
   // console.log(isUser);
   const router = useRouter();
 
-  const handleLogout = () => {
-    dispatch(logout());
-    router.push("/");
+  const handleLogout = async () => {
+    const toastId = toast.loading("Logging out...");
+
+    try {
+      const result = await logoutCookies();
+
+      if (result.success) {
+        dispatch(logout());
+        toast.success("Logged out successfully!", {
+          id: toastId,
+        });
+
+        router.push("/");
+      } else {
+        toast.error("Failed to log out", { id: toastId });
+      }
+    } catch (error) {
+      toast.error("An error occurred during logout", { id: toastId });
+    }
   };
 
   const handleProfileClick = () => {
@@ -51,32 +66,6 @@ export const Navbar = () => {
       >
         <NavbarContent className=" basis-1 pl-4" justify="end">
           {/* <ThemeSwitch /> */}
-          <div>
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Avatar
-                  // isBordered
-                  as="button"
-                  className="transition-transform"
-                  color="secondary"
-                  name="Jason Hughes"
-                  size="sm"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
-                  <p className="font-semibold">Signed in as</p>
-                  <p className="font-semibold">zoey@example.com</p>
-                </DropdownItem>
-                <DropdownItem key="settings">My Settings</DropdownItem>
-
-                <DropdownItem key="logout" color="danger">
-                  Log Out
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
 
           {isUser ? (
             <div>
@@ -113,15 +102,32 @@ export const Navbar = () => {
               </Dropdown>
             </div>
           ) : (
-            <NavbarMenuItem>
+            // <NavbarMenuItem className="hover:text-primary/70 hover:font-semibold transition-colors text-xl my-3 ">
+            //   <Link href={"/login"}>Login </Link>
+            //   <span> || </span>
+            //   <Link href={"/regigter"}>Register </Link>
+            // </NavbarMenuItem>
+
+            <NavbarMenuItem className="flex items-center justify-center space-x-4 text-lg my-4">
+              {/* Login Link */}
               <Link
-                className="hover:text-primary/70 hover:font-semibold transition-colors text-4xl my-3 text-[#FF7F50]"
-                href={"/login"}
+                className="text-customBlue hover:text-customOrange hover:underline font-semibold transition-colors duration-200"
+                href="/login"
               >
-                Login{" "}
+                Login
+              </Link>
+
+              {/* Separator */}
+              <span className="text-gray-400 font-light">|</span>
+
+              {/* Register Link */}
+              <Link
+                className="text-customBlue hover:text-customOrange hover:underline font-semibold transition-colors duration-200"
+                href="/register"
+              >
+                Register
               </Link>
             </NavbarMenuItem>
-            // <Button onClick={() => router.push("/login")}>Login</Button>
           )}
 
           <NavbarMenuToggle />

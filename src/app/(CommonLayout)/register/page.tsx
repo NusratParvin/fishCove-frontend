@@ -6,10 +6,11 @@ import Image from "next/image";
 import { Input, Checkbox, Button } from "@nextui-org/react";
 import { useState } from "react";
 import { Eye, EyeOff, CheckCircle } from "lucide-react";
-import image from "@/src/assets/images/Fish-logo-template-on-transparent-background-PNG.png";
-import { useSignupMutation } from "@/src/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+import image from "@/src/assets/images/Fish-logo-template-on-transparent-background-PNG.png";
+import { useSignupMutation } from "@/src/redux/features/auth/authApi";
 
 const Registration = () => {
   const {
@@ -35,12 +36,14 @@ const Registration = () => {
 
   // Cloudinary upload handler using environment variables
   const handleProfilePhotoUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
+
     if (!file) return;
 
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET as string);
 
@@ -51,9 +54,10 @@ const Registration = () => {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const data = await res.json();
+
       setValue("profilePhoto", data.secure_url);
       setUploading(false);
     } catch (error) {
@@ -70,6 +74,7 @@ const Registration = () => {
 
     try {
       const res = await signup(userInfo).unwrap();
+
       console.log(res);
       if (res.statusCode === 201) {
         toast.success("Registration successful!", {
@@ -87,6 +92,7 @@ const Registration = () => {
         const message =
           signUpError?.data?.errorSources[0]?.path +
           signUpError?.data?.errorSources[0]?.message;
+
         toast.error(`SignUp Failed: ${message}`, {
           id: toastId,
           duration: 4000,
@@ -109,13 +115,13 @@ const Registration = () => {
           {/* Left side content */}
           <div className="flex items-start justify-center flex-col">
             <div className="mb-4">
-              <Link href="/" className="flex items-center justify-start">
+              <Link className="flex items-center justify-start" href="/">
                 <Image
                   alt="logo"
+                  className="w-20 inline-block"
+                  height={40}
                   src={image}
                   width={160}
-                  height={40}
-                  className="w-20 inline-block"
                 />
                 <p className="font-normal font-raleway text-5xl text-[#FF7F50] tracking-tighter">
                   <span className="italic font-semibold">fish</span>Cove
@@ -159,7 +165,7 @@ const Registration = () => {
             <div className="space-y-4">
               {/* Name Field */}
               <div className="flex items-baseline gap-3">
-                <label htmlFor="name" className="text-gray-800 text-sm w-1/5">
+                <label className="text-gray-800 text-sm w-1/5" htmlFor="name">
                   Name
                 </label>
                 <div className="relative w-4/5">
@@ -177,7 +183,7 @@ const Registration = () => {
 
               {/* Email Field */}
               <div className="flex items-baseline gap-3">
-                <label htmlFor="email" className="text-gray-800 text-sm w-1/5">
+                <label className="text-gray-800 text-sm w-1/5" htmlFor="email">
                   Email
                 </label>
                 <div className="relative w-4/5">
@@ -203,8 +209,8 @@ const Registration = () => {
               {/* Address Field */}
               <div className="flex items-baseline gap-3">
                 <label
-                  htmlFor="address"
                   className="text-gray-800 text-sm w-1/5"
+                  htmlFor="address"
                 >
                   Address
                 </label>
@@ -219,7 +225,7 @@ const Registration = () => {
 
               {/*  Phone Number Field */}
               <div className="flex items-baseline gap-3">
-                <label htmlFor=" phone" className="text-gray-800 text-sm w-1/5">
+                <label className="text-gray-800 text-sm w-1/5" htmlFor=" phone">
                   Phone
                 </label>
                 <div className="relative w-4/5">
@@ -243,8 +249,8 @@ const Registration = () => {
               {/* Password Field */}
               <div className="flex items-baseline gap-3  ">
                 <label
-                  htmlFor="password"
                   className="text-gray-800 text-sm w-1/5"
+                  htmlFor="password"
                 >
                   Password
                 </label>
@@ -255,14 +261,13 @@ const Registration = () => {
                       minLength: 6,
                     })}
                     // fullWidth
-                    type={showPassword ? "text" : "password"}
+                    className="w-full"
                     color={errors.password ? "danger" : "default"}
-                    placeholder="Enter password"
                     endContent={
                       <Button
-                        onClick={togglePasswordVisibility}
                         className="text-gray-600 bg-transparent"
                         size="sm"
+                        onClick={togglePasswordVisibility}
                       >
                         {showPassword ? (
                           <EyeOff className="text-2xl text-default-400 pointer-events-none" />
@@ -271,7 +276,8 @@ const Registration = () => {
                         )}
                       </Button>
                     }
-                    className="w-full"
+                    placeholder="Enter password"
+                    type={showPassword ? "text" : "password"}
                   />
                 </div>
               </div>
@@ -279,17 +285,17 @@ const Registration = () => {
               {/* Profile Photo Upload */}
               <div className="flex items-baseline gap-3">
                 <label
-                  htmlFor="profilePhoto"
                   className="text-gray-800 text-sm w-1/5"
+                  htmlFor="profilePhoto"
                 >
                   Photo
                 </label>
                 <div className="relative w-4/5">
                   <input
-                    type="file"
                     accept="image/*"
-                    onChange={handleProfilePhotoUpload}
                     className="w-full mt-2 bg-gray-100 rounded-xl p-1.5 text-sm text-gray-500"
+                    type="file"
+                    onChange={handleProfilePhotoUpload}
                   />
                   {uploading && (
                     <p className="text-green-500 text-xs pt-1">Uploading...</p>
@@ -307,11 +313,11 @@ const Registration = () => {
                   color="primary"
                   size="sm"
                 />
-                <label htmlFor="terms" className="text-gray-800 text-xs">
+                <label className="text-gray-800 text-xs" htmlFor="terms">
                   I accept the{" "}
                   <Link
-                    href="/terms"
                     className="text-[#33B7FF] font-semibold hover:underline text-xs"
+                    href="/terms"
                   >
                     Terms and Conditions
                   </Link>
@@ -327,8 +333,8 @@ const Registration = () => {
             <div className="mt-6">
               <Button
                 className="bg-[#FF7F50] w-full text-white font-semibold rounded-sm"
-                type="submit"
                 disabled={uploading}
+                type="submit"
               >
                 {uploading ? "Uploading..." : "Create Account"}
               </Button>
@@ -337,14 +343,14 @@ const Registration = () => {
             <p className="text-sm text-gray-800 mt-2 text-center">
               Already have an account?{" "}
               <Link
-                href="/login"
                 className="text-[#33B7FF] font-semibold hover:underline ml-1"
+                href="/login"
               >
                 Login here
               </Link>
             </p>
           </form>
-          <div className="divider absolute left-0 right-0 mx-auto w-1 h-full border-l border-gray-200 max-md:hidden"></div>
+          <div className="divider absolute left-0 right-0 mx-auto w-1 h-full border-l border-gray-200 max-md:hidden" />
         </div>
       </div>
     </div>
