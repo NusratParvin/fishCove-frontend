@@ -46,6 +46,14 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    followUser: builder.mutation({
+      query: ({ followUserId }) => ({
+        url: `/users/${followUserId}/follow`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User", "Articles"],
+    }),
   }),
 });
 
@@ -55,4 +63,5 @@ export const {
   useGetAllUsersQuery,
   useDeleteUserMutation,
   usePromoteUserToAdminMutation,
+  useFollowUserMutation,
 } = userApi;

@@ -42,6 +42,7 @@ export type TPopulatedAuthor = {
   _id: string;
   name: string;
   profilePhoto?: string;
+  followers: string[];
 };
 export type TArticle = {
   _id: string;

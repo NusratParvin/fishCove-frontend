@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardBody, Button, Avatar } from "@nextui-org/react";
 import {
   ArrowUp,
@@ -15,12 +15,24 @@ import Image from "next/image";
 import image from "@/src/assets/images/clown.jpg";
 import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
+import { useFollowUserMutation } from "@/src/redux/features/user/userApi";
+import { useAppSelector } from "@/src/redux/hooks";
+import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 
 export default function SingleArticleCard({ article }: { article: TArticle }) {
   const { authorId } = article;
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const [isFollowing, setIsFollowing] = useState(false); // Track follow status
   const [voteArticle] = useVoteArticleMutation();
+  const [followUser] = useFollowUserMutation();
+
+  const user = useAppSelector(useCurrentUser);
+
+  useEffect(() => {
+    // Check if the user is already following the author
+    const alreadyFollowing = article?.authorId?.followers?.includes(user?._id);
+    setIsFollowing(alreadyFollowing || false);
+  }, [article, user]);
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
@@ -48,6 +60,21 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
     }
   };
 
+  const handleFollow = async () => {
+    try {
+      setIsFollowing((prev) => !prev);
+
+      const result = await followUser({
+        followUserId: authorId._id,
+      }).unwrap();
+
+      setIsFollowing(result?.isFollowing || false);
+    } catch (error) {
+      setIsFollowing((prev) => !prev);
+      console.error("Failed to follow/unfollow:", error);
+    }
+  };
+
   return (
     <Card className="max-w-full bg-secondary/30 text-black/70 rounded-sm">
       <CardBody className="py-2">
@@ -69,17 +96,20 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
               <div className="flex items-center justify-end mb-1">
                 <Avatar
                   className="mr-1 bg-primary/30 w-6 h-6"
-                  src={authorId?.profilePhoto}
+                  src={authorId?.profilePhoto || "/placeholder.svg"}
                 />
                 <span className="text-xs font-semibold mr-2">
                   {authorId?.name || "Anonymous"}
                 </span>
+
+                {/* Follow/Unfollow Button */}
                 <Button
+                  onClick={handleFollow}
                   className="mr-2 text-xs h-5 min-w-unit-16 bg-customBlue text-white"
                   color="primary"
                   size="sm"
                 >
-                  Follow
+                  {isFollowing ? "Unfollow" : "Follow"}
                 </Button>
                 <span className="text-xs text-gray-500">
                   • {new Date(article?.createdAt).toLocaleDateString()}
@@ -150,12 +180,14 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
               </Button>
 
               <Button
-                className="mr-4 text-gray-700"
+                className="mr-4 text-customBlue"
                 size="sm"
                 startContent={<MessagesSquare size={14} />}
                 variant="light"
               >
-                {article.comments.length} comments
+                <span className="text-black/80">
+                  {article.comments.length} comments
+                </span>
               </Button>
 
               <Button

@@ -52,8 +52,8 @@ export const Navbar = () => {
     }
   };
 
-  const handleProfileClick = () => {
-    router.push("/user");
+  const handleDashboardClick = () => {
+    router.push("/user/newsfeed");
   };
 
   return (
@@ -88,7 +88,7 @@ export const Navbar = () => {
                     <p className="font-semibold">Signed in as</p>
                     <p className="font-semibold">{isUser.email}</p>
                   </DropdownItem>
-                  <DropdownItem key="profile" onClick={handleProfileClick}>
+                  <DropdownItem key="dashboard" onClick={handleDashboardClick}>
                     My Profile
                   </DropdownItem>
                   <DropdownItem
