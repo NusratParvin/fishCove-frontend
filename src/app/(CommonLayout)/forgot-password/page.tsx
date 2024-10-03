@@ -24,7 +24,7 @@ const ForgetPassword = () => {
         setEmailSent(true);
         console.log(result);
         toast.success(
-          "A reset link has been sent to your email. Please check your inbox."
+          "A reset link has been sent to your email. Please check your inbox.",
         );
       }
     } catch (error) {
@@ -46,19 +46,19 @@ const ForgetPassword = () => {
               type="email"
               {...register("email", { required: "Email is required" })}
               fullWidth
+              className="text-gray-700"
               color={errors.email ? "danger" : "default"}
               variant="bordered"
-              className="text-gray-700"
             />
 
             <Spacer y={1.5} />
 
             <div className="w-1/3 mx-auto">
               <Button
+                className="py-1.5 px-3"
                 color="primary"
                 disabled={isLoading}
                 type="submit"
-                className="py-1.5 px-3"
               >
                 {isLoading ? "Sending..." : "Send Reset Email"}
               </Button>

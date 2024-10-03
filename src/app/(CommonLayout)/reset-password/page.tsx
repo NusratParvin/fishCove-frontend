@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form"; // React Hook Form
 import { useRouter } from "next/navigation"; // For redirection after success
 import { Input, Button, Card, Spacer } from "@nextui-org/react"; // NextUI components
 import { toast } from "sonner"; // Toast for notifications
-import { useResetPasswordMutation } from "@/src/redux/features/auth/authApi";
 import { Eye, EyeOff } from "lucide-react"; // Eye icons for visibility toggle
+
+import { useResetPasswordMutation } from "@/src/redux/features/auth/authApi";
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
@@ -37,6 +38,7 @@ const ResetPasswordPage = () => {
   const onSubmit = async (data: any) => {
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
+
       return;
     }
 
@@ -61,18 +63,17 @@ const ResetPasswordPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="md:w-1/2 w-full mx-auto p-8 text-gray-700">
         <h2 className="text-center mb-6">Reset Your Password</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* New Password Field */}
           <Input
-            type={showPassword ? "text" : "password"}
             label="New Password"
             placeholder="Enter your new password"
+            type={showPassword ? "text" : "password"}
             {...register("newPassword", {
               required: "New password is required",
             })}
-            color={errors.newPassword ? "danger" : "default"}
             fullWidth
-            variant="bordered"
+            color={errors.newPassword ? "danger" : "default"}
             endContent={
               <Button
                 className="text-gray-600 bg-transparent"
@@ -86,21 +87,21 @@ const ResetPasswordPage = () => {
                 )}
               </Button>
             }
+            variant="bordered"
           />
 
           <Spacer y={1} />
 
           {/* Confirm Password Field */}
           <Input
-            type={showConfirmPassword ? "text" : "password"}
             label="Confirm New Password"
             placeholder="Confirm your new password"
+            type={showConfirmPassword ? "text" : "password"}
             {...register("confirmPassword", {
               required: "Please confirm your password",
             })}
-            color={errors.confirmPassword ? "danger" : "default"}
             fullWidth
-            variant="bordered"
+            color={errors.confirmPassword ? "danger" : "default"}
             endContent={
               <Button
                 className="text-gray-600 bg-transparent"
@@ -114,12 +115,13 @@ const ResetPasswordPage = () => {
                 )}
               </Button>
             }
+            variant="bordered"
           />
 
           <Spacer y={1.5} />
 
           <div className="w-1/3 mx-auto">
-            <Button type="submit" disabled={isLoading} color="primary">
+            <Button color="primary" disabled={isLoading} type="submit">
               {isLoading ? "Resetting Password..." : "Reset Password"}
             </Button>
           </div>

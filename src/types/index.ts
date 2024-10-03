@@ -27,7 +27,7 @@ export interface IUserJwtPayload extends JwtPayload {
   exp: number;
 }
 
-export type TUserRole = "user" | "admin";
+export type TUserRole = "USER" | "ADMIN";
 export interface TUser {
   _id?: string;
   name: string;
@@ -37,3 +37,25 @@ export interface TUser {
   address: string;
   role: TUserRole;
 }
+
+export type TPopulatedAuthor = {
+  _id: string;
+  name: string;
+  profilePhoto?: string;
+};
+export type TArticle = {
+  _id: string;
+  authorId: TPopulatedAuthor;
+  title: string;
+  content: string;
+  category: "Tip" | "Story";
+  images?: string;
+  upvotes: number;
+  downvotes: number;
+  comments: string[];
+  isPremium: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+};

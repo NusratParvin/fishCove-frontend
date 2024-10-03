@@ -2,50 +2,66 @@ import baseApi from "../../api/baseApi";
 
 export const articlesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllBikes: builder.query({
-      query: () => "/bikes",
-      providesTags: ["Bikes"],
+    getAllArticles: builder.query({
+      query: () => "/articles",
+      providesTags: ["Articles"],
     }),
 
-    getBikeById: builder.query({
+    getArticleById: builder.query({
       query: (id) => ({
-        url: `/bikes/${id}`,
+        url: `/articles/${id}`,
         method: "GET",
       }),
     }),
 
-    createBike: builder.mutation({
-      query: (bike) => ({
-        url: "/bikes",
+    createArticle: builder.mutation({
+      query: (article) => ({
+        url: "/articles",
         method: "POST",
-        body: bike,
+        body: article,
       }),
-      invalidatesTags: ["Bikes"],
+      invalidatesTags: ["Articles"],
     }),
 
-    updateBike: builder.mutation({
-      query: ({ id, ...bike }) => ({
-        url: `/bikes/${id}`,
+    updateArticle: builder.mutation({
+      query: ({ id, ...article }) => ({
+        url: `/articles/${id}`,
         method: "PUT",
-        body: bike,
+        body: article,
       }),
-      invalidatesTags: ["Bikes"],
+      invalidatesTags: ["Articles"],
     }),
 
-    deleteBike: builder.mutation({
+    deleteArticle: builder.mutation({
       query: (id) => ({
-        url: `/bikes/${id}`,
+        url: `/articles/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Bikes"],
+      invalidatesTags: ["Articles"],
+    }),
+
+    getDashboardFeed: builder.query({
+      query: () => "/articles/dashboard-feed",
+      providesTags: ["Articles", "Authors"],
+    }),
+
+    voteArticle: builder.mutation({
+      query: ({ articleId, voteType }) => ({
+        url: `/articles/${articleId}/vote`,
+        method: "PATCH",
+        body: { action: voteType },
+      }),
+      invalidatesTags: ["Articles"],
     }),
   }),
 });
 
 export const {
-  useGetAllBikesQuery,
-  useGetBikeByIdQuery,
-  useCreateBikeMutation,
-  useUpdateBikeMutation,
-  useDeleteBikeMutation,
+  useGetAllArticlesQuery,
+  useGetArticleByIdQuery,
+  useCreateArticleMutation,
+  useUpdateArticleMutation,
+  useDeleteArticleMutation,
+  useGetDashboardFeedQuery,
+  useVoteArticleMutation,
 } = articlesApi;

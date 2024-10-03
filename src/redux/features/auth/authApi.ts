@@ -32,7 +32,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: { id, newPassword }, // No need to send the token in the body
         headers: {
-          Authorization: `Bearer ${token}`, // Token is sent in the header
+          Authorization: `Bearer ${token}`,
         },
       }),
     }),

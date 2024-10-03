@@ -1,43 +1,20 @@
 "use client";
-import { Button } from "@nextui-org/button";
-import Link from "next/link";
-import Image from "next/image";
+import SuggestedAuthor from "../../user/components/suggestedAuthor";
+import SuggestedArticles from "../../user/components/suggestedArticles";
 
-// import { useUser } from "@/src/context/user.provider";
+import { useAppSelector } from "@/src/redux/hooks";
+import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 
 const Sidebar = () => {
-  // const { user } = useUser();
+  const user = useAppSelector(useCurrentUser);
 
   return (
-    <div>
-      <div className="rounded-xl bg-default-100 p-2">
-        <div className="h-[330px] w-full rounded-md">
-          <Image
-            alt="profile"
-            className="w-full h-full object-cover rounded-md"
-            height={330}
-            // src={user?.profilePhoto as string}
-            src="kdmk"
-            width={330}
-          />
-        </div>
-        <div className="my-3">
-          {/* <h1 className="text-2xl font-semibold">{user?.name}</h1> */}
-          {/* <p className="break-words text-sm">{user?.email}</p> */}
-        </div>
-        <Button
-          as={Link}
-          className="mt-2 w-full rounded-md"
-          href={"/profile/create-post"}
-        >
-          Create a post
-        </Button>
+    <div className="flex flex-col bg-secondary/20 border-none">
+      <div className=" ">
+        <SuggestedAuthor />
       </div>
-      <div className="mt-3 space-y-2 rounded-xl bg-default-100 p-2">
-        {/* <SidebarOptions
-          // links={user?.role === "USER" ? userLinks : adminLinks}
-          links={#}
-        /> */}
+      <div>
+        <SuggestedArticles />
       </div>
     </div>
   );
