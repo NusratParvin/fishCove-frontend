@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Card, CardBody, Button, Avatar } from "@nextui-org/react";
+import { Card, CardBody, Button, Avatar, Chip } from "@nextui-org/react";
 import {
   ArrowUp,
   ArrowDown,
@@ -12,7 +12,8 @@ import {
   MessagesSquare,
 } from "lucide-react";
 import Image from "next/image";
-import image from "@/src/assets/images/clown.jpg";
+
+import fallbackImage from "@/src/assets/images/fish-2333.gif";
 import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
 import { useFollowUserMutation } from "@/src/redux/features/user/userApi";
@@ -22,15 +23,18 @@ import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 export default function SingleArticleCard({ article }: { article: TArticle }) {
   const { authorId } = article;
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false); // Track follow status
+  const [isFollowing, setIsFollowing] = useState(false);
   const [voteArticle] = useVoteArticleMutation();
   const [followUser] = useFollowUserMutation();
 
   const user = useAppSelector(useCurrentUser);
 
+  // const fallbackImage = "/src/assets/images/fish-2333.gif";
   useEffect(() => {
-    // Check if the user is already following the author
-    const alreadyFollowing = article?.authorId?.followers?.includes(user?._id);
+    const alreadyFollowing = article?.authorId?.followers?.includes(
+      user?._id as string
+    );
+
     setIsFollowing(alreadyFollowing || false);
   }, [article, user]);
 
@@ -78,15 +82,28 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
   return (
     <Card className="max-w-full bg-secondary/30 text-black/70 rounded-sm">
       <CardBody className="py-2">
-        <div className="flex items-start">
+        <div className="flex items-start ">
           {/* Thumbnail */}
-          <div className="w-36 h-32 relative flex items-center justify-center mr-3">
+          {/* <div className="w-36 h-32 relative  flex items-center justify-center mr-3">
             <Image
               alt="Thumbnail"
-              src={image}
+              className="rounded-md "
               layout="fill"
               objectFit="cover"
+              src={article.images || fallbackImage}
+            />
+          </div> */}
+
+          <div className="w-28 h-32 relative flex items-center justify-center mr-3">
+            <Image
+              alt="Thumbnail"
               className="rounded-md "
+              layout="fill" // Ensures the image fills the parent container
+              objectFit="cover" // Ensures the image covers the div without distortion
+              src={article.images || fallbackImage}
+              // width={100} // Set a consistent width
+              // height={128} // Set a consistent height
+              style={{ minWidth: "100px", minHeight: "128px" }} // Ensures the image div has a consistent size
             />
           </div>
 
@@ -104,10 +121,10 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
 
                 {/* Follow/Unfollow Button */}
                 <Button
-                  onClick={handleFollow}
                   className="mr-2 text-xs h-5 min-w-unit-16 bg-customBlue text-white"
                   color="primary"
                   size="sm"
+                  onClick={handleFollow}
                 >
                   {isFollowing ? "Unfollow" : "Follow"}
                 </Button>
@@ -116,21 +133,31 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
                 </span>
               </div>
 
-              {/* Toggle button for expanding/collapsing content */}
-              <Button
-                isIconOnly
-                variant="light"
-                className={`text-gray-500 mt-2 transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onPress={toggleContent}
-              >
-                {isExpanded ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </Button>
+              <div className="flex items-center">
+                <span className="text-xs text-gray-500">
+                  <Chip
+                    className="mr-2 text-xs h-5 min-w-unit-16 bg-customOrange text-white"
+                    variant="shadow"
+                  >
+                    • {article?.category}
+                  </Chip>
+                </span>
+                {/* Toggle button for expanding/collapsing content */}
+                <Button
+                  isIconOnly
+                  className={`text-gray-500 mt-0  h-5 min-w-unit-6 transform transition-transform duration-300 ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
+                  variant="light"
+                  onPress={toggleContent}
+                >
+                  {isExpanded ? (
+                    <ChevronUp size={16} />
+                  ) : (
+                    <ChevronDown size={16} />
+                  )}
+                </Button>
+              </div>
             </div>
 
             <h2 className="text-base text-cyan-800 font-medium mb-1">
@@ -165,7 +192,6 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
                   {article.upvotes}
                 </span>
               </Button>
-
               <Button
                 isIconOnly
                 className="text-red-500 mr-4"
@@ -178,7 +204,6 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
                   {article.downvotes}
                 </span>
               </Button>
-
               <Button
                 className="mr-4 text-customBlue"
                 size="sm"
@@ -189,7 +214,6 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
                   {article.comments.length} comments
                 </span>
               </Button>
-
               <Button
                 className="mr-4 text-gray-700"
                 size="sm"
@@ -198,24 +222,35 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
               >
                 Add Comment
               </Button>
-              <Button
-                className="mr-4 text-gray-700"
-                size="sm"
-                startContent={<Share size={14} />}
-                variant="light"
-                disabled
-              >
-                Share
-              </Button>
-              <Button
-                size="sm"
-                className="mr-4 text-gray-700"
-                startContent={<Flag size={14} />}
-                variant="light"
-                disabled
-              >
-                Report
-              </Button>
+              {article?.isPremium ? (
+                <>
+                  <Button
+                    className="mr-4 text-gray-700  font-bold"
+                    size="sm"
+                    variant="light"
+                  >
+                    7 USD
+                  </Button>
+
+                  <Button
+                    className="mr-4 text-gray-700 bg-customBlue"
+                    size="sm"
+                    variant="light"
+                  >
+                    Buy Now{" "}
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  disabled
+                  disableAnimation
+                  className="mr-4 text-customOrange  font-semibold"
+                  size="sm"
+                  variant="light"
+                >
+                  Free
+                </Button>
+              )}
             </div>
           </div>
         </div>

@@ -1,8 +1,11 @@
 "use client";
 
 import { Divider } from "@nextui-org/react";
-import SingleArticleCard from "../components/singleArticleCard";
+
 import { useGetAllArticlesQuery } from "@/src/redux/features/articles/articlesApi";
+import ArticleCard from "./components/articleCard";
+import ErrorNewsfeed from "./components/errorNewsfeed";
+import LoaderNewsfeed from "./components/loaderNewsfeed";
 
 const Page = () => {
   const {
@@ -12,12 +15,11 @@ const Page = () => {
   } = useGetAllArticlesQuery(undefined);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoaderNewsfeed />;
   }
 
   if (error) {
-    console.log(error);
-    return <div>{error?.data?.message}</div>;
+    return <ErrorNewsfeed />;
   }
 
   return (
@@ -27,13 +29,14 @@ const Page = () => {
           Articles
         </h1>
       </div>
-      <Divider className="bg-highlight/20 border-none" />
-      <div className="p-2 flex flex-col">
+      <Divider className="bg-gray-400/20 border-none" />
+      <div className="p-2 flex flex-col gap-2">
         {allArticles?.data?.map((article: any) => (
           <div key={article._id}>
-            <SingleArticleCard article={article} />
+            <ArticleCard article={article} />
           </div>
         ))}
+        {/* <ArticleCard /> */}
       </div>
     </div>
   );

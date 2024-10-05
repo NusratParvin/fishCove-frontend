@@ -8,6 +8,8 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export interface IUser {
   _id: string;
   name: string;
+  bio?: string;
+
   role: string;
   email: string;
   status: string;
@@ -33,9 +35,15 @@ export interface TUser {
   name: string;
   email: string;
   password: string;
+  bio?: string;
   phone: string;
   address: string;
   role: TUserRole;
+  profilePhoto?: string;
+  terms?: boolean;
+  followers: string[];
+  following: string[];
+  articles: string[];
 }
 
 export type TPopulatedAuthor = {
@@ -55,6 +63,7 @@ export type TArticle = {
   downvotes: number;
   comments: string[];
   isPremium: boolean;
+  price: number;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

@@ -13,14 +13,18 @@ import { TUserRole } from "@/src/types";
 //   exp: number;
 // };
 type TUser = {
+  _id?: string;
   name: string;
   email: string;
   password: string;
   phone: string;
-  address?: string;
+  address: string;
   role: TUserRole;
   profilePhoto?: string;
   terms?: boolean;
+  followers: string[];
+  following: string[];
+  articles: string[];
 };
 
 type TAuthState = {

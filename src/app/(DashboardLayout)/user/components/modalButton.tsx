@@ -2,21 +2,26 @@
 import { Button, useDisclosure } from "@nextui-org/react";
 
 import CreateArticleModal from "./createArticle";
+import Link from "next/link";
 
 const ModalButton = () => {
-  const { isOpen, onOpenChange } = useDisclosure(); // Modal state
+  const { isOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
-      {/* Button to open modal */}
-      <Button
-        className="bg-highlight text-white text-base font-bold rounded-full"
-        onPress={onOpenChange} // Use onPress instead of onOpen
+      <Link
+        className="bg-highlight text-white text-base font-bold rounded-full text-center py-2"
+        href={"/user/create-post"}
       >
         Create Article
-      </Button>
+      </Link>
+      {/* <Button
+        className="bg-highlight text-white text-base font-bold rounded-full"
+        onPress={onOpenChange} 
+      >
+        Create Article
+      </Button> */}
 
-      {/* Modal to create an article */}
       <CreateArticleModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </>
   );

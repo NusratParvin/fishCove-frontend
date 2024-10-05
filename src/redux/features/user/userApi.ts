@@ -11,13 +11,10 @@ const userApi = baseApi.injectEndpoints({
     }),
 
     updateUser: builder.mutation({
-      query: ({ token, updatedUserInfo }) => ({
+      query: (updatedUserInfo) => ({
         url: "/users/me",
         method: "PUT",
         body: updatedUserInfo,
-        headers: {
-          Authorization: token,
-        },
       }),
       invalidatesTags: ["User"],
     }),
@@ -54,6 +51,10 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Articles"],
     }),
+
+    getMostFollowedAuthors: builder.query({
+      query: () => "/users/most-followed",
+    }),
   }),
 });
 
@@ -64,4 +65,5 @@ export const {
   useDeleteUserMutation,
   usePromoteUserToAdminMutation,
   useFollowUserMutation,
+  useGetMostFollowedAuthorsQuery,
 } = userApi;

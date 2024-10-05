@@ -1,7 +1,9 @@
-import React from "react";
+import Profile from "./component/profileInfo";
 
-const page = () => {
-  return <div>profile</div>;
-};
-
-export default page;
+export default function page() {
+  return (
+    <div className="me-1">
+      <Profile />
+    </div>
+  );
+}

@@ -10,10 +10,10 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col bg-secondary/20 border-none">
-      <div className=" ">
+      <div className="min-h-[50vh]">
         <SuggestedAuthor />
       </div>
-      <div>
+      <div className="min-h-[60vh]">
         <SuggestedArticles />
       </div>
     </div>
