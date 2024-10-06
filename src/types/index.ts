@@ -69,3 +69,18 @@ export type TArticle = {
   updatedAt: string;
   __v?: number;
 };
+
+export type TComment = {
+  _id: string;
+  articleId: string;
+  commenter: {
+    commenterId: string;
+    name: string;
+    profilePhoto?: string;
+  };
+  content: string;
+  upvotes: number;
+  downvotes: number;
+  createdAt: string;
+  updatedAt: string;
+};

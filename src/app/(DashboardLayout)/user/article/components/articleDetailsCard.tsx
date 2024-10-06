@@ -6,87 +6,78 @@ import {
   CardFooter,
   Avatar,
   Button,
-  Badge,
   Chip,
+  Skeleton,
 } from "@nextui-org/react";
 import {
   ArrowUp,
   ArrowDown,
-  MessageCircle,
-  Repeat,
-  Share,
-  DollarSign,
-  ChevronDown,
-  ChevronUp,
-  BadgeDollarSignIcon,
-  BadgeDollarSign,
-  Tag,
-  Lock,
   MessagesSquare,
-  MessageSquareText,
+  BadgeDollarSign,
 } from "lucide-react";
 import Image from "next/image";
 import fallbackImage from "@/src/assets/images/fallback.jpg";
-import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
-import { TArticle } from "@/src/types";
+import {
+  useVoteArticleMutation,
+  useGetArticleByIdQuery,
+} from "@/src/redux/features/articles/articlesApi";
 import { useFollowUserMutation } from "@/src/redux/features/user/userApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { TArticle } from "@/src/types";
 
-const ArticleCard = ({ article }: { article: TArticle }) => {
-  const { authorId } = article;
+const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [voteArticle] = useVoteArticleMutation();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const [followUser] = useFollowUserMutation();
   const user = useAppSelector(useCurrentUser);
+  const [article, setArticle] = useState(articleInfo);
+  //   console.log(article, "inside component");
 
-  // Check if user is already following the author
   useEffect(() => {
-    const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string
-    );
-    setIsFollowing(alreadyFollowing || false);
+    if (article && article.authorId) {
+      const alreadyFollowing = article?.authorId?.followers?.includes(
+        user?._id as string
+      );
+      setIsFollowing(alreadyFollowing || false);
+    }
   }, [article, user]);
 
-  const toggleContent = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  // Handle article upvote
+  // Handle upvote
   const handleUpvote = async () => {
     try {
-      await voteArticle({
+      const res = await voteArticle({
         articleId: article._id,
         voteType: "upvote",
       }).unwrap();
+      console.log(res.data);
+      setArticle(res.data);
     } catch (error) {
       console.error("Failed to upvote:", error);
     }
   };
 
-  // Handle article downvote
+  // Handle downvote
   const handleDownvote = async () => {
     try {
-      await voteArticle({
+      const res = await voteArticle({
         articleId: article._id,
         voteType: "downvote",
       }).unwrap();
+      setArticle(res.data);
     } catch (error) {
       console.error("Failed to downvote:", error);
     }
   };
 
-  // Handle follow/unfollow user
+  // Handle follow/unfollow
   const handleFollow = async () => {
     try {
       setIsFollowing((prev) => !prev);
       const result = await followUser({
-        followUserId: authorId._id,
+        followUserId: article.authorId._id,
       }).unwrap();
       setIsFollowing(result?.isFollowing || false);
     } catch (error) {
@@ -102,13 +93,16 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
     >
       {/* Card Header */}
       <CardHeader className="flex flex-col items-start p-5">
-        <div className="flex justify-between items-start w-full">
-          <div className="flex items-center   w-full mb-3">
-            <Avatar src={authorId?.profilePhoto} className="w-12 h-12" />
+        <div className="flex justify-between items-start w-full  ">
+          <div className="flex items-center w-full mb-3">
+            <Avatar
+              src={article?.authorId?.profilePhoto}
+              className="w-12 h-12"
+            />
             <div className="ml-3 flex-grow">
               <div className="flex gap-6 items-end">
                 <h3 className="text-base font-bold">
-                  {authorId?.name || "Anonymous"}
+                  {article?.authorId?.name || "Anonymous"}
                 </h3>
                 <Button
                   className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
@@ -131,8 +125,7 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
               </div>
             </div>
           </div>
-          {/* Toggle content visibility */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-start mr-2">
             {article?.isPremium ? (
               <BadgeDollarSign size={22} className="text-yellow-500" />
             ) : (
@@ -140,15 +133,6 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
                 <strong>Free</strong>
               </Chip>
             )}
-            {/* Lock icon with premium color */}
-            <Button
-              isIconOnly
-              className={`text-gray-500 mt-0 h-8 min-w-unit-6 transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-              variant="light"
-              onPress={toggleContent}
-            >
-              {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </Button>
           </div>
         </div>
 
@@ -156,23 +140,13 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
           {article.title}
         </h2>
 
-        <div
-          ref={contentRef}
-          className={`transition-all duration-700 ease-in-out overflow-hidden ${
-            isExpanded ? "max-h-[1500px]" : "max-h-[80px]"
-          }`}
-        >
-          <div
-            dangerouslySetInnerHTML={{
-              __html: article.content,
-            }}
-          />
-        </div>
+        {/* Show full article content */}
+        <div dangerouslySetInnerHTML={{ __html: article.content }} />
       </CardHeader>
 
       {/* Card Body (Image) */}
       <CardBody className="p-0">
-        <div className="relative h-64 w-full">
+        <div className="relative h-72 w-full">
           <Image
             alt="Article Image"
             src={article.images || fallbackImage}
@@ -212,16 +186,8 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
           >
             {article?.comments?.length}
           </Button>
-          {/* <Button
-            size="sm"
-            variant="light"
-            startContent={
-              <MessageSquareText size={16} className="text-gray-500" />
-            }
-          >
-            Add Comment
-          </Button> */}
         </div>
+
         <div className="flex items-center">
           {article.isPremium && (
             <Button
@@ -238,4 +204,4 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
   );
 };
 
-export default ArticleCard;
+export default ArticleDetailsCard;
