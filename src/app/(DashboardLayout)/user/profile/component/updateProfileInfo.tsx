@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Card, CardBody, Avatar, Button, Input } from "@nextui-org/react";
-import { Link as LinkIcon, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { useUpdateUserMutation } from "@/src/redux/features/user/userApi";
 import avatarImage from "@/src/assets/images/team.png";
-import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setUser, useCurrentToken } from "@/src/redux/features/auth/authSlice";
 
@@ -21,7 +22,7 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
   toggleEditMode,
 }) => {
   const [profilePhoto, setProfilePhoto] = useState(
-    user?.profilePhoto || avatarImage
+    user?.profilePhoto || avatarImage,
   );
   const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
@@ -47,6 +48,7 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     const formData = new FormData();
@@ -61,9 +63,10 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const data = await res.json();
+
       setProfilePhoto(data.secure_url);
 
       setValue("profilePhoto", data.secure_url);
@@ -95,6 +98,7 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
 
     if (Object.keys(updatedData).length === 0) {
       toast.info("No changes detected");
+
       return;
     }
 
@@ -135,21 +139,21 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
       <div className="flex flex-row justify-between items-center">
         <div>
           <Avatar
-            src={profilePhoto}
-            className="absolute top-16 left-4 w-32 h-32 border-4 border-white z-10 cursor-pointer"
             alt={`${user?.name}'s avatar`}
+            className="absolute top-16 left-4 w-32 h-32 border-4 border-white z-10 cursor-pointer"
+            src={profilePhoto}
           />
           <input
-            type="file"
-            style={{ display: "none" }}
-            id="profilePhotoUpload"
             accept="image/*"
+            id="profilePhotoUpload"
+            style={{ display: "none" }}
+            type="file"
             onChange={handleImageChange}
           />
           <Button
-            size="sm"
             className="absolute top-32 left-40"
             color="default"
+            size="sm"
             onClick={() =>
               document.getElementById("profilePhotoUpload")?.click()
             }
@@ -170,43 +174,43 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
           <CardBody className="mt-10 ps-8 text-black ">
             {/* Name */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
-              <label htmlFor="name" className="text-right text-black text-sm">
+              <label className="text-right text-black text-sm" htmlFor="name">
                 Name
               </label>
               <Input
-                size="sm"
                 id="name"
+                size="sm"
                 variant="flat"
                 {...register("name", { required: "Name is required" })}
                 fullWidth
-                placeholder="Enter your name"
                 className="!text-black/90 !placeholder-black/90"
+                placeholder="Enter your name"
               />
             </div>
 
             {/* Bio */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
-              <label htmlFor="bio" className="text-right text-black text-sm">
+              <label className="text-right text-black text-sm" htmlFor="bio">
                 {" "}
                 {/* Added text-black */}
                 Bio
               </label>
               <Input
                 id="bio"
-                variant="flat"
                 size="sm"
+                variant="flat"
                 {...register("bio")}
                 fullWidth
-                placeholder="Write something about yourself..."
                 className="!text-black/90 !placeholder-black/90"
+                placeholder="Write something about yourself..."
               />
             </div>
 
             {/* Address */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
               <label
-                htmlFor="address"
                 className="text-right text-black text-sm"
+                htmlFor="address"
               >
                 {" "}
                 {/* Added text-black */}
@@ -214,8 +218,8 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
               </label>
               <Input
                 id="address"
-                variant="flat"
                 size="sm"
+                variant="flat"
                 {...register("address")}
                 fullWidth
                 className="!text-black/90 !placeholder-black/90"
@@ -225,16 +229,16 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
 
             {/* Email */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
-              <label htmlFor="email" className="text-right text-black text-sm">
+              <label className="text-right text-black text-sm" htmlFor="email">
                 {" "}
                 {/* Added text-black */}
                 Email
               </label>
               <Input
                 id="email"
+                size="sm"
                 type="email"
                 variant="flat"
-                size="sm"
                 {...register("email", { required: "Email is required" })}
                 fullWidth
                 className="!text-black/90 !placeholder-black/90"
@@ -247,14 +251,14 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
 
             {/* Phone */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
-              <label htmlFor="phone" className="text-right text-black text-sm">
+              <label className="text-right text-black text-sm" htmlFor="phone">
                 {" "}
                 {/* Added text-black */}
                 Phone
               </label>
               <Input
-                size="sm"
                 id="phone"
+                size="sm"
                 variant="flat"
                 {...register("phone")}
                 fullWidth
@@ -269,10 +273,10 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
       {/* Save and Cancel buttons */}
       <div className="flex items-center justify-end gap-2 mt-2">
         <Button
-          color="default"
           className="bg-customBlue font-semibold text-white"
-          type="submit"
+          color="default"
           form="profileForm"
+          type="submit"
         >
           Save
         </Button>

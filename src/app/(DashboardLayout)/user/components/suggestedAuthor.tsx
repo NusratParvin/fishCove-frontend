@@ -1,7 +1,8 @@
+import { Card, Button, Avatar, Link, Skeleton } from "@nextui-org/react";
+
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 import { useGetMostFollowedAuthorsQuery } from "@/src/redux/features/user/userApi";
 import { useAppSelector } from "@/src/redux/hooks";
-import { Card, Button, Avatar, Link, Skeleton } from "@nextui-org/react";
 
 export default function SuggestedAuthor() {
   const {
@@ -33,7 +34,7 @@ export default function SuggestedAuthor() {
         {authors?.data?.slice(0, 4).map((author: any, index: number) => (
           <div key={index} className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <Avatar src={author.profilePhoto} className="mr-2" />
+              <Avatar className="mr-2" src={author.profilePhoto} />
               <div>
                 <div className="flex items-center text-cyan-800">
                   <span className="font-semibold text-xs mr-3">

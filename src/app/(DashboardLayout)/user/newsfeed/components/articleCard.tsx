@@ -6,34 +6,26 @@ import {
   CardFooter,
   Avatar,
   Button,
-  Badge,
   Chip,
 } from "@nextui-org/react";
 import {
   ArrowUp,
   ArrowDown,
-  MessageCircle,
-  Repeat,
-  Share,
-  DollarSign,
   ChevronDown,
   ChevronUp,
-  BadgeDollarSignIcon,
   BadgeDollarSign,
-  Tag,
-  Lock,
   MessagesSquare,
-  MessageSquareText,
 } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+
 import fallbackImage from "@/src/assets/images/fallback.jpg";
 import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
 import { useFollowUserMutation } from "@/src/redux/features/user/userApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
 const ArticleCard = ({ article }: { article: TArticle }) => {
   const { authorId } = article;
@@ -45,11 +37,11 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
   const [followUser] = useFollowUserMutation();
   const user = useAppSelector(useCurrentUser);
 
-  // Check if user is already following the author
   useEffect(() => {
     const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string
+      user?._id as string,
     );
+
     setIsFollowing(alreadyFollowing || false);
   }, [article, user]);
 
@@ -69,7 +61,6 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
     }
   };
 
-  // Handle article downvote
   const handleDownvote = async () => {
     try {
       await voteArticle({
@@ -81,13 +72,13 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
     }
   };
 
-  // Handle follow/unfollow user
   const handleFollow = async () => {
     try {
       setIsFollowing((prev) => !prev);
       const result = await followUser({
         followUserId: authorId._id,
       }).unwrap();
+
       setIsFollowing(result?.isFollowing || false);
     } catch (error) {
       setIsFollowing((prev) => !prev);
@@ -104,7 +95,7 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
       <CardHeader className="flex flex-col items-start p-5">
         <div className="flex justify-between items-start w-full">
           <div className="flex items-center   w-full mb-3">
-            <Avatar src={authorId?.profilePhoto} className="w-12 h-12" />
+            <Avatar className="w-12 h-12" src={authorId?.profilePhoto} />
             <div className="ml-3 flex-grow">
               <div className="flex gap-6 items-end">
                 <h3 className="text-base font-bold">
@@ -121,8 +112,8 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
               </div>
               <div className="flex items-center text-xs text-gray-500 mt-1">
                 <Chip
-                  size="sm"
                   className="bg-customBlue/10 text-customBlue font-semibold"
+                  size="sm"
                 >
                   {article?.category}
                 </Chip>
@@ -134,7 +125,7 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
           {/* Toggle content visibility */}
           <div className="flex items-center gap-1">
             {article?.isPremium ? (
-              <BadgeDollarSign size={22} className="text-yellow-500" />
+              <BadgeDollarSign className="text-yellow-500" size={22} />
             ) : (
               <Chip color="success" variant="flat">
                 <strong>Free</strong>
@@ -152,8 +143,8 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
           </div>
         </div>
 
-        <h2 className="text-base text-customOrange/80 font-semibold mb-2">
-          {article.title}
+        <h2 className="text-base text-customOrange/80 font-semibold mb-2 underline">
+          <Link href={`/user/article/${article?._id}`}>{article.title}</Link>
         </h2>
 
         <div
@@ -175,9 +166,9 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
         <div className="relative h-64 w-full">
           <Image
             alt="Article Image"
-            src={article.images || fallbackImage}
             layout="fill"
             objectFit="cover"
+            src={article.images || fallbackImage}
           />
         </div>
       </CardBody>
@@ -187,28 +178,28 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
         <div className="flex space-x-3">
           <Button
             size="sm"
+            startContent={<ArrowUp className="text-green-500" size={16} />}
             variant="light"
-            startContent={<ArrowUp size={16} className="text-green-500" />}
             onClick={handleUpvote}
           >
             {article.upvotes}
           </Button>
           <Button
             size="sm"
+            startContent={<ArrowDown className="text-red-500" size={16} />}
             variant="light"
-            startContent={<ArrowDown size={16} className="text-red-500" />}
             onClick={handleDownvote}
           >
             {article.downvotes}
           </Button>
           <Button
-            href={`/user/article/${article._id}`}
             as={Link}
+            href={`/user/article/${article._id}`}
             size="sm"
-            variant="light"
             startContent={
-              <MessagesSquare size={16} className="text-customBlue" />
+              <MessagesSquare className="text-customBlue" size={16} />
             }
+            variant="light"
           >
             {article?.comments?.length}
           </Button>
@@ -225,8 +216,8 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
         <div className="flex items-center">
           {article.isPremium && (
             <Button
-              size="sm"
               className="bg-customBlue text-white"
+              size="sm"
               variant="flat"
             >
               Buy Now ${article.price.toFixed(2)}

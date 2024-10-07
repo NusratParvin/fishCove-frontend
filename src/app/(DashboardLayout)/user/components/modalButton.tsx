@@ -1,8 +1,8 @@
 "use client";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
+import Link from "next/link";
 
 import CreateArticleModal from "./createArticle";
-import Link from "next/link";
 
 const ModalButton = () => {
   const { isOpen, onOpenChange } = useDisclosure();

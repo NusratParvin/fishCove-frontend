@@ -2,7 +2,6 @@ import { Card, CardBody, Image, Link } from "@nextui-org/react";
 
 import { useGetAllArticlesQuery } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
-import fallbackImage from "@/src/assets/images/fish-2333.gif";
 
 export default function SuggestedArticles() {
   const {
@@ -17,7 +16,7 @@ export default function SuggestedArticles() {
   const sortedArticles = [...(allArticles?.data || [])]
     .sort(
       (a: TArticle, b: TArticle) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
     .slice(0, 4);
 

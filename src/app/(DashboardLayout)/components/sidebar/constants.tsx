@@ -1,17 +1,16 @@
-import { Home, User, Settings, Bookmark } from "lucide-react";
+import { Home, User, Settings, Bookmark, Pen } from "lucide-react";
 
 export const userLinks = [
   { href: "/user/newsfeed", label: "News Feed", icon: <Home size={16} /> },
-  { href: "/profile/followers", label: "Followers", icon: <User size={16} /> },
-  {
-    href: "/user/profile/following",
-    label: "Following",
-    icon: <User size={16} />,
-  },
   {
     href: "/user/profile",
     label: "My Profile",
-    icon: <Settings size={16} />,
+    icon: <User size={16} />,
+  },
+  {
+    href: "/user/manage-articles",
+    label: "Manage Articles",
+    icon: <Pen size={16} />,
   },
 ];
 

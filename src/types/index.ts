@@ -70,17 +70,24 @@ export type TArticle = {
   __v?: number;
 };
 
-export type TComment = {
+export interface TVoteInfo {
+  userId: string;
+  voteType: "upvote" | "downvote";
+  _id: string;
+}
+
+export interface TComment {
   _id: string;
   articleId: string;
   commenter: {
     commenterId: string;
     name: string;
-    profilePhoto?: string;
+    profilePhoto: string;
   };
   content: string;
   upvotes: number;
   downvotes: number;
+  voteInfo: TVoteInfo[];
   createdAt: string;
   updatedAt: string;
-};
+}

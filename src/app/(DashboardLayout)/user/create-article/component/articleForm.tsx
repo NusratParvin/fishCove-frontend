@@ -14,9 +14,11 @@ import { useForm, FieldValues, Controller } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
+
 import "react-quill/dist/quill.snow.css";
-import { useCreateArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { useRouter } from "next/navigation";
+
+import { useCreateArticleMutation } from "@/src/redux/features/articles/articlesApi";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -35,15 +37,17 @@ const ArticleForm = () => {
   const [createArticle, { isLoading }] = useCreateArticleMutation();
 
   const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
+
     if (!file) return;
 
     const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
     const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET as string);
 
@@ -54,9 +58,10 @@ const ArticleForm = () => {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const data = await res.json();
+
       setValue("images", data.secure_url);
       setUploading(false);
     } catch (error) {
@@ -72,6 +77,7 @@ const ArticleForm = () => {
       data.price = Number(data.price);
     }
     const articleData = { ...data, content, images: data.images || null };
+
     console.log(articleData);
     try {
       const response = await createArticle(articleData).unwrap();
@@ -97,22 +103,22 @@ const ArticleForm = () => {
     <Card className="max-w-3xl mx-auto px-4 py-8">
       <CardBody>
         <form
-          onSubmit={handleSubmit(onSubmit)}
           className="space-y-6 text-black/70"
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Controller
-            name="title"
             control={control}
-            rules={{ required: "Title is required" }}
+            name="title"
             render={({ field }) => (
               <Input
                 {...field}
-                label="Title"
-                placeholder="Enter article title"
                 fullWidth
                 isInvalid={!!errors.title}
+                label="Title"
+                placeholder="Enter article title"
               />
             )}
+            rules={{ required: "Title is required" }}
           />
 
           <div>
@@ -123,8 +129,6 @@ const ArticleForm = () => {
               Content
             </label>
             <ReactQuill
-              value={content}
-              onChange={setContent}
               className="h-64 mb-12"
               modules={{
                 toolbar: [
@@ -140,20 +144,21 @@ const ArticleForm = () => {
                   ["clean"],
                 ],
               }}
+              value={content}
+              onChange={setContent}
             />
           </div>
 
           <Controller
-            name="category"
             control={control}
-            rules={{ required: "Category is required" }}
+            name="category"
             render={({ field }) => (
               <Select
                 {...field}
-                label="Category"
-                placeholder="Select a category"
                 fullWidth
                 isInvalid={!!errors.category}
+                label="Category"
+                placeholder="Select a category"
               >
                 <SelectItem key="Tip" value="Tip">
                   Tip
@@ -163,15 +168,16 @@ const ArticleForm = () => {
                 </SelectItem>
               </Select>
             )}
+            rules={{ required: "Category is required" }}
           />
 
           <Input
-            type="file"
-            accept="image/*"
-            label="Upload Image"
-            onChange={handleImageUpload}
             fullWidth
+            accept="image/*"
             className="text-xs"
+            label="Upload Image"
+            type="file"
+            onChange={handleImageUpload}
           />
 
           <div className="flex flex-row justify-evenly items-center">
@@ -187,27 +193,27 @@ const ArticleForm = () => {
 
             {isPremium && (
               <Controller
-                name="price"
                 control={control}
-                rules={{ required: "Price is required for premium content" }}
+                name="price"
                 render={({ field }) => (
                   <Input
                     className="w-1/2"
                     {...field}
-                    type="number"
-                    label="Price"
-                    placeholder="Enter price for the premium article"
                     fullWidth
                     isInvalid={!!errors.price}
+                    label="Price"
+                    placeholder="Enter price for the premium article"
+                    type="number"
                   />
                 )}
+                rules={{ required: "Price is required for premium content" }}
               />
             )}
           </div>
 
           <Spacer y={2} />
 
-          <Button type="submit" color="primary" isLoading={isLoading} fullWidth>
+          <Button fullWidth color="primary" isLoading={isLoading} type="submit">
             Create Article
           </Button>
         </form>

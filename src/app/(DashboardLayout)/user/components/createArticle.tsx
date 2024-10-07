@@ -17,8 +17,9 @@ import { toast } from "sonner";
 import dynamic from "next/dynamic";
 
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
-import { useCreateArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { useRouter } from "next/navigation";
+
+import { useCreateArticleMutation } from "@/src/redux/features/articles/articlesApi";
 
 // Dynamically import Quill editor for SSR
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -45,7 +46,7 @@ const CreateArticleModal = ({
   const router = useRouter();
 
   const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
 
@@ -66,7 +67,7 @@ const CreateArticleModal = ({
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const data = await res.json();
 

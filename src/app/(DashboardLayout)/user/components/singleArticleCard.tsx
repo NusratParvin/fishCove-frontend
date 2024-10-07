@@ -4,8 +4,6 @@ import { Card, CardBody, Button, Avatar, Chip } from "@nextui-org/react";
 import {
   ArrowUp,
   ArrowDown,
-  Share,
-  Flag,
   ChevronDown,
   ChevronUp,
   MessageSquareText,
@@ -32,7 +30,7 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
   // const fallbackImage = "/src/assets/images/fish-2333.gif";
   useEffect(() => {
     const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string
+      user?._id as string,
     );
 
     setIsFollowing(alreadyFollowing || false);
@@ -242,8 +240,8 @@ export default function SingleArticleCard({ article }: { article: TArticle }) {
                 </>
               ) : (
                 <Button
-                  disabled
                   disableAnimation
+                  disabled
                   className="mr-4 text-customOrange  font-semibold"
                   size="sm"
                   variant="light"

@@ -6,54 +6,55 @@ import ArticleCard from "./articleCard";
 
 import image1 from "@/src/assets/images/24331527_4800_2_09.jpg"; // Example image
 
+// Mock data structured similarly to your MongoDB schema
 const articles = [
   {
-    id: 1,
+    _id: "67015d61328dbbe36241d893",
     title: "Essential Tips for Maintaining Aquarium Water Quality",
-    author: "Aquatic Experts",
-    date: "October 5, 2024",
+    authorId: { name: "Aquatic Experts" }, // Adjusted to match MongoDB structure
+    createdAt: "2024-10-05T15:38:09.246Z", // Simulating MongoDB date format
     category: "Fish Care",
-    image: image1,
+    images: image1,
   },
   {
-    id: 2,
+    _id: "67015d61328dbbe36241d894",
     title: "Understanding Betta Fish Behavior and Needs",
-    author: "PetPlace Staff",
-    date: "October 12, 2024",
+    authorId: { name: "PetPlace Staff" },
+    createdAt: "2024-10-12T15:38:09.246Z",
     category: "Fish Health",
-    image: image1,
+    images: image1,
   },
   {
-    id: 3,
+    _id: "67015d61328dbbe36241d895",
     title: "Recognizing Signs of Stress in Aquarium Fish",
-    author: "Bennett Glace",
-    date: "October 14, 2024",
+    authorId: { name: "Bennett Glace" },
+    createdAt: "2024-10-14T15:38:09.246Z",
     category: "Fish Health",
-    image: image1,
+    images: image1,
   },
   {
-    id: 4,
+    _id: "67015d61328dbbe36241d896",
     title: "The Importance of Regular Tank Maintenance",
-    author: "Richard Rowlands",
-    date: "October 18, 2024",
+    authorId: { name: "Richard Rowlands" },
+    createdAt: "2024-10-18T15:38:09.246Z",
     category: "Fish Care",
-    image: image1,
+    images: image1,
   },
   {
-    id: 5,
+    _id: "67015d61328dbbe36241d897",
     title: "Feeding Your Fish: What You Need to Know",
-    author: "Aquatic Nutritionists",
-    date: "October 20, 2024",
+    authorId: { name: "Aquatic Nutritionists" },
+    createdAt: "2024-10-20T15:38:09.246Z",
     category: "Fish Nutrition",
-    image: image1,
+    images: image1,
   },
   {
-    id: 6,
+    _id: "67015d61328dbbe36241d898",
     title: "Creating a Balanced Aquarium Diet",
-    author: "Dr. John Doe",
-    date: "October 22, 2024",
+    authorId: { name: "Dr. John Doe" },
+    createdAt: "2024-10-22T15:38:09.246Z",
     category: "Fish Nutrition",
-    image: image1,
+    images: image1,
   },
 ];
 
@@ -71,47 +72,7 @@ const Articles = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-          // <Card key={article.id} className="py-4 text-black">
-          //   <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          //     <p
-          //       className={`text-tiny font-semibold px-4 py-1.5 rounded-full text-black/70 ${
-          //         article.category === "Fish Health"
-          //           ? "bg-customBlue"
-          //           : "bg-customOrange"
-          //       }`}
-          //     >
-          //       {article.category}
-          //     </p>
-          //     <Link
-          //       href={`/articles/${article.id}`}
-          //       className="font-semibold text-medium underline mt-3"
-          //     >
-          //       {article.title}
-          //     </Link>
-          //   </CardHeader>
-          //   <CardBody className="overflow-visible h-56 py-2">
-          //     <Image
-          //       alt="Card background"
-          //       className="object-cover h-full"
-          //       src={article.image}
-          //       width={270}
-          //     />
-          //   </CardBody>
-
-          //   <CardFooter className="absolute bg-white/50 bottom-0 border-t-1 border-zinc-100/50 z-10">
-          //     <div className="flex justify-between items-center text-black w-full">
-          //       <div className="flex items-center gap-2">
-          //         <PenIcon size={16} />
-          //         <small>{article.author}</small>
-          //       </div>
-          //       <div className="flex items-center gap-2">
-          //         <CalendarIcon size={16} />
-          //         <small>{article.date}</small>
-          //       </div>
-          //     </div>
-          //   </CardFooter>
-          // </Card>
+          <ArticleCard key={article._id} article={article} />
         ))}
       </div>
     </div>

@@ -7,7 +7,6 @@ import {
   Avatar,
   Button,
   Chip,
-  Skeleton,
 } from "@nextui-org/react";
 import {
   ArrowUp,
@@ -16,16 +15,15 @@ import {
   BadgeDollarSign,
 } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { toast } from "sonner";
+
 import fallbackImage from "@/src/assets/images/fallback.jpg";
-import {
-  useVoteArticleMutation,
-  useGetArticleByIdQuery,
-} from "@/src/redux/features/articles/articlesApi";
+import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
 import { useFollowUserMutation } from "@/src/redux/features/user/userApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { TArticle } from "@/src/types";
 
 const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
@@ -34,173 +32,190 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
   const [followUser] = useFollowUserMutation();
   const user = useAppSelector(useCurrentUser);
   const [article, setArticle] = useState(articleInfo);
-  //   console.log(article, "inside component");
 
   useEffect(() => {
     if (article && article.authorId) {
       const alreadyFollowing = article?.authorId?.followers?.includes(
-        user?._id as string
+        user?._id as string,
       );
+
       setIsFollowing(alreadyFollowing || false);
     }
   }, [article, user]);
 
-  // Handle upvote
   const handleUpvote = async () => {
     try {
       const res = await voteArticle({
         articleId: article._id,
         voteType: "upvote",
       }).unwrap();
-      console.log(res.data);
+
       setArticle(res.data);
     } catch (error) {
       console.error("Failed to upvote:", error);
     }
   };
 
-  // Handle downvote
   const handleDownvote = async () => {
     try {
       const res = await voteArticle({
         articleId: article._id,
         voteType: "downvote",
       }).unwrap();
+
       setArticle(res.data);
     } catch (error) {
       console.error("Failed to downvote:", error);
     }
   };
 
-  // Handle follow/unfollow
   const handleFollow = async () => {
+    const toastId = toast("Processing...");
+
     try {
-      setIsFollowing((prev) => !prev);
       const result = await followUser({
         followUserId: article.authorId._id,
       }).unwrap();
-      setIsFollowing(result?.isFollowing || false);
+
+      if (result.success) {
+        setIsFollowing((prev) => !prev);
+
+        toast.success(
+          isFollowing ? "Unfollowed this user." : "Following this user!",
+          {
+            id: toastId,
+            className: "text-green-500",
+          },
+        );
+      }
     } catch (error) {
-      setIsFollowing((prev) => !prev);
+      toast.error("Failed to process the follow/unfollow action.", {
+        id: toastId,
+        className: "text-red-500",
+      });
       console.error("Failed to follow/unfollow:", error);
     }
   };
 
   return (
-    <Card
-      className="max-w-full mx-auto text-black/80 text-sm bg-white shadow-lg"
-      radius="none"
-    >
-      {/* Card Header */}
-      <CardHeader className="flex flex-col items-start p-5">
-        <div className="flex justify-between items-start w-full  ">
-          <div className="flex items-center w-full mb-3">
-            <Avatar
-              src={article?.authorId?.profilePhoto}
-              className="w-12 h-12"
-            />
-            <div className="ml-3 flex-grow">
-              <div className="flex gap-6 items-end">
-                <h3 className="text-base font-bold">
-                  {article?.authorId?.name || "Anonymous"}
-                </h3>
-                <Button
-                  className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
-                  color="primary"
-                  size="sm"
-                  onClick={handleFollow}
-                >
-                  {isFollowing ? "Unfollow" : "Follow"}
-                </Button>
-              </div>
-              <div className="flex items-center text-xs text-gray-500 mt-1">
-                <Chip
-                  size="sm"
-                  className="bg-customBlue/10 text-customBlue font-semibold"
-                >
-                  {article?.category}
-                </Chip>
-                <span className="mx-2">•</span>
-                <span>{new Date(article?.createdAt).toLocaleDateString()}</span>
+    <div>
+      <Card
+        className="max-w-full mx-auto text-black/80 text-sm bg-white shadow-lg"
+        radius="none"
+      >
+        {/* Card Header */}
+        <CardHeader className="flex flex-col items-start p-5">
+          <div className="flex justify-between items-start w-full">
+            <div className="flex items-center w-full mb-3">
+              <Avatar
+                className="w-12 h-12"
+                src={article?.authorId?.profilePhoto}
+              />
+              <div className="ml-3 flex-grow">
+                <div className="flex gap-6 items-end">
+                  <h3 className="text-base font-bold">
+                    {article?.authorId?.name || "Anonymous"}
+                  </h3>
+                  <Button
+                    className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
+                    color="primary"
+                    size="sm"
+                    onClick={handleFollow}
+                  >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                  </Button>
+                </div>
+                <div className="flex items-center text-xs text-gray-500 mt-1">
+                  <Chip
+                    className="bg-customBlue/10 text-customBlue font-semibold"
+                    size="sm"
+                  >
+                    {article?.category}
+                  </Chip>
+                  <span className="mx-2">•</span>
+                  <span>
+                    {new Date(article?.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
             </div>
+            <div className="flex items-start mr-2">
+              {article?.isPremium ? (
+                <BadgeDollarSign className="text-yellow-500" size={22} />
+              ) : (
+                <Chip color="success" variant="flat">
+                  <strong>Free</strong>
+                </Chip>
+              )}
+            </div>
           </div>
-          <div className="flex items-start mr-2">
-            {article?.isPremium ? (
-              <BadgeDollarSign size={22} className="text-yellow-500" />
-            ) : (
-              <Chip color="success" variant="flat">
-                <strong>Free</strong>
-              </Chip>
-            )}
+
+          <h2 className="text-base text-customOrange/80 font-semibold mb-2">
+            {article.title}
+          </h2>
+
+          {/* Show full article content */}
+          <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        </CardHeader>
+
+        {/* Card Body (Image) */}
+        <CardBody className="p-0">
+          <div className="relative h-72 w-full">
+            <Image
+              alt="Article Image"
+              layout="fill"
+              objectFit="cover"
+              src={article.images || fallbackImage}
+            />
           </div>
-        </div>
+        </CardBody>
 
-        <h2 className="text-base text-customOrange/80 font-semibold mb-2">
-          {article.title}
-        </h2>
-
-        {/* Show full article content */}
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
-      </CardHeader>
-
-      {/* Card Body (Image) */}
-      <CardBody className="p-0">
-        <div className="relative h-72 w-full">
-          <Image
-            alt="Article Image"
-            src={article.images || fallbackImage}
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-      </CardBody>
-
-      {/* Card Footer */}
-      <CardFooter className="flex justify-between items-center p-5 text-gray-700">
-        <div className="flex space-x-3">
-          <Button
-            size="sm"
-            variant="light"
-            startContent={<ArrowUp size={16} className="text-green-500" />}
-            onClick={handleUpvote}
-          >
-            {article.upvotes}
-          </Button>
-          <Button
-            size="sm"
-            variant="light"
-            startContent={<ArrowDown size={16} className="text-red-500" />}
-            onClick={handleDownvote}
-          >
-            {article.downvotes}
-          </Button>
-          <Button
-            href={`/user/article/${article._id}`}
-            as={Link}
-            size="sm"
-            variant="light"
-            startContent={
-              <MessagesSquare size={16} className="text-customBlue" />
-            }
-          >
-            {article?.comments?.length}
-          </Button>
-        </div>
-
-        <div className="flex items-center">
-          {article.isPremium && (
+        {/* Card Footer */}
+        <CardFooter className="flex justify-between items-center p-5 text-gray-700">
+          <div className="flex space-x-3">
             <Button
               size="sm"
-              className="bg-customBlue text-white"
-              variant="flat"
+              startContent={<ArrowUp className="text-green-500" size={16} />}
+              variant="light"
+              onClick={handleUpvote}
             >
-              Buy Now ${article.price.toFixed(2)}
+              {article.upvotes}
             </Button>
-          )}
-        </div>
-      </CardFooter>
-    </Card>
+            <Button
+              size="sm"
+              startContent={<ArrowDown className="text-red-500" size={16} />}
+              variant="light"
+              onClick={handleDownvote}
+            >
+              {article.downvotes}
+            </Button>
+            <Button
+              as={Link}
+              href={`/user/article/${article._id}`}
+              size="sm"
+              startContent={
+                <MessagesSquare className="text-customBlue" size={16} />
+              }
+              variant="light"
+            >
+              {article?.comments?.length}
+            </Button>
+          </div>
+
+          <div className="flex items-center">
+            {article.isPremium && (
+              <Button
+                className="bg-customBlue text-white"
+                size="sm"
+                variant="flat"
+              >
+                Buy Now ${article.price.toFixed(2)}
+              </Button>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

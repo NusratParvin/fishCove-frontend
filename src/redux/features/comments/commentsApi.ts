@@ -9,7 +9,36 @@ export const commentsApi = baseApi.injectEndpoints({
         body: commentData,
       }),
     }),
+
+    voteComment: builder.mutation({
+      query: ({ commentId, voteType }) => ({
+        url: `/comments/${commentId}/vote`,
+        method: "PATCH",
+        body: { voteType },
+      }),
+    }),
+
+    updateComment: builder.mutation({
+      query: ({ commentId, content }) => ({
+        url: `/comments/${commentId}`,
+        method: "PATCH",
+        body: { content },
+      }),
+    }),
+
+    deleteComment: builder.mutation({
+      query: ({ commentId, articleId }) => ({
+        url: `/comments/${commentId}`,
+        method: "DELETE",
+        body: articleId,
+      }),
+    }),
   }),
 });
 
-export const { useAddCommentMutation } = commentsApi;
+export const {
+  useAddCommentMutation,
+  useVoteCommentMutation,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
+} = commentsApi;

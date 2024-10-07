@@ -3,13 +3,30 @@ import baseApi from "../../api/baseApi";
 export const articlesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllArticles: builder.query({
-      query: () => "/articles",
+      query: () => ({
+        url: "/articles",
+        method: "GET",
+      }),
       providesTags: ["Articles"],
     }),
 
     getArticleById: builder.query({
       query: (id) => ({
         url: `/articles/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    getMyArticles: builder.query({
+      query: () => ({
+        url: "/articles/me",
+        method: "GET",
+      }),
+    }),
+
+    getFollowingArticles: builder.query({
+      query: () => ({
+        url: "/articles/following",
         method: "GET",
       }),
     }),
@@ -59,6 +76,8 @@ export const articlesApi = baseApi.injectEndpoints({
 export const {
   useGetAllArticlesQuery,
   useGetArticleByIdQuery,
+  useGetMyArticlesQuery,
+  useGetFollowingArticlesQuery,
   useCreateArticleMutation,
   useUpdateArticleMutation,
   useDeleteArticleMutation,

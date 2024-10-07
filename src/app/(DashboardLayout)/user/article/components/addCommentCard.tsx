@@ -1,10 +1,11 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { Button, Avatar, Card, CardBody, Input } from "@nextui-org/react";
+import { toast } from "sonner";
+
 import { useAppSelector } from "@/src/redux/hooks";
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 import { useAddCommentMutation } from "@/src/redux/features/comments/commentsApi";
-import { toast } from "sonner";
 
 type FormData = {
   content: string;
@@ -22,7 +23,6 @@ const AddCommentCard = ({ articleId }: { articleId: string }) => {
       commenter: {
         commenterId: user?._id,
         name: user?.name,
-
         profilePhoto: user?.profilePhoto || "",
       },
     };
@@ -33,7 +33,7 @@ const AddCommentCard = ({ articleId }: { articleId: string }) => {
 
     try {
       const response = await addComment(commentData).unwrap();
-      console.log(response);
+
       reset();
 
       toast.success("Comment added successfully!", {
@@ -55,43 +55,42 @@ const AddCommentCard = ({ articleId }: { articleId: string }) => {
 
   return (
     <Card
-      radius="none"
       className="max-w-full mx-auto bg-white shadow-sm text-gray-700 my-4"
+      radius="none"
     >
       <CardBody className="p-3">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex items-center space-x-2  ">
-            {/* User Avatar */}
+          <div className="flex items-center space-x-2">
             <Avatar
-              src={user?.profilePhoto || "/fallback.svg"}
-              size="sm"
               className="bg-orange-500 text-white w-7 h-7"
               fallback={user?.name?.charAt(0) || "U"}
+              size="sm"
+              src={user?.profilePhoto || "/fallback.svg"}
             />
 
-            <div className="flex-grow ">
+            <div className="flex-grow">
               <Input
                 {...register("content", { required: "Comment is required" })}
-                placeholder="Write your comment..."
                 fullWidth
                 isClearable
+                placeholder="Write your comment..."
                 variant="flat"
               />
             </div>
 
             <div className="flex space-x-2 items-center">
               <Button
+                className="bg-customBlue text-white"
                 size="sm"
                 type="submit"
                 variant="shadow"
-                className="bg-customBlue text-white"
               >
                 Post
               </Button>
               <Button
+                color="danger"
                 size="sm"
                 variant="shadow"
-                color="danger"
                 onPress={onCancel}
               >
                 Cancel

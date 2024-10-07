@@ -1,4 +1,3 @@
-// Main Profile Component
 "use client";
 import React, { useState } from "react";
 import {
@@ -11,9 +10,11 @@ import {
   Skeleton,
 } from "@nextui-org/react";
 import { MapPin, Link as LinkIcon, Calendar, PhoneCall } from "lucide-react";
+
+import UpdateProfileInfo from "./updateProfileInfo";
+
 import { useGetUserInfoQuery } from "@/src/redux/features/user/userApi";
 import avatarImage from "@/src/assets/images/team.png";
-import UpdateProfileInfo from "./updateProfileInfo";
 
 export default function Profile() {
   const { data: userInfo, isLoading, error } = useGetUserInfoQuery(undefined);
@@ -71,7 +72,7 @@ export default function Profile() {
   return (
     <div className="me-1">
       {isEditing ? (
-        <UpdateProfileInfo user={user} toggleEditMode={toggleEditMode} />
+        <UpdateProfileInfo toggleEditMode={toggleEditMode} user={user} />
       ) : (
         <Card className="w-full max-w-3xl mx-auto shadow-md" radius="none">
           {/* Background header with a gradient */}
@@ -80,9 +81,9 @@ export default function Profile() {
           </CardHeader>
 
           <Avatar
-            src={user?.profilePhoto || avatarImage}
-            className="absolute top-16 left-4 w-32 h-32 border-4 border-white z-10"
             alt={`${user?.name}'s avatar`}
+            className="absolute top-16 left-4 w-32 h-32 border-4 border-white z-10"
+            src={user?.profilePhoto || avatarImage}
           />
 
           {/* Main card body with profile information */}
@@ -94,8 +95,8 @@ export default function Profile() {
               {/* Edit button */}
               <Button
                 color="default"
-                variant="flat"
                 radius="full"
+                variant="flat"
                 onClick={toggleEditMode}
               >
                 Edit
@@ -111,16 +112,16 @@ export default function Profile() {
             <div className="flex flex-wrap gap-y-3 gap-12 text-sm text-gray-600">
               {user?.address && (
                 <div className="flex items-center mr-4 text-sm">
-                  <MapPin size={12} className="mr-1" />
+                  <MapPin className="mr-1" size={12} />
                   <span>{user.address}</span>
                 </div>
               )}
               {user?.email && (
                 <div className="flex items-center mr-4 text-sm">
-                  <LinkIcon size={12} className="mr-1" />
+                  <LinkIcon className="mr-1" size={12} />
                   <Link
-                    href={`mailto:${user.email}`}
                     className="text-customOrange text-sm italic hover:underline"
+                    href={`mailto:${user.email}`}
                   >
                     {user.email}
                   </Link>
@@ -130,14 +131,14 @@ export default function Profile() {
             <div className="flex flex-wrap gap-y-3 gap-20 text-sm text-gray-600 mt-4">
               {user?.phone && (
                 <div className="flex items-center mr-4 text-sm">
-                  <PhoneCall size={12} className="mr-1" />
+                  <PhoneCall className="mr-1" size={12} />
 
                   <span>{user?.phone}</span>
                 </div>
               )}
               {user?.createdAt && (
                 <div className="flex items-center mr-4 text-sm">
-                  <Calendar size={12} className="mr-1" />
+                  <Calendar className="mr-1" size={12} />
                   <span>
                     Joined {new Date(user.createdAt).toLocaleDateString()}
                   </span>
