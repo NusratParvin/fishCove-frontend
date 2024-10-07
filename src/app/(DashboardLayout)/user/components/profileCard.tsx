@@ -10,7 +10,6 @@ const UserProfileCard = () => {
   const user = useAppSelector(useCurrentUser);
 
   if (!user) {
-    // Fallback case if no data is present
     return (
       <div className="flex justify-center items-center h-full">
         <h2 className="text-red-500">No user data available</h2>
