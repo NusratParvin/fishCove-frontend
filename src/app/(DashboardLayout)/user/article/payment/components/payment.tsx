@@ -2,10 +2,11 @@
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useSearchParams } from "next/navigation";
+
 import CheckoutForm from "./checkoutForm";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_PK as string
+  process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_PK as string,
 );
 
 const Payment = () => {

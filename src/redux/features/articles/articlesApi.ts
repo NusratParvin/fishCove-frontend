@@ -41,10 +41,10 @@ export const articlesApi = baseApi.injectEndpoints({
     }),
 
     updateArticle: builder.mutation({
-      query: ({ id, ...article }) => ({
+      query: ({ id, updatedFields }) => ({
         url: `/articles/${id}`,
-        method: "PUT",
-        body: article,
+        method: "PATCH",
+        body: updatedFields,
       }),
       invalidatesTags: ["Articles"],
     }),

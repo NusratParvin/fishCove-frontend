@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { toast } from "sonner";
+import { Card, CardBody, Button, Input } from "@nextui-org/react";
+import { Lock } from "lucide-react";
 
 import PaymentSuccess from "./paymentSuccess";
 
@@ -10,9 +12,6 @@ import {
   useCreatePaymentIntentMutation,
   useSavePaymentDataMutation,
 } from "@/src/redux/features/payment/paymentApi";
-
-import { Card, CardBody, Button, Input } from "@nextui-org/react";
-import { Lock } from "lucide-react";
 
 type CheckoutFormProps = {
   amount: number;
@@ -134,10 +133,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       {transactionId ? (
         <div className=" w-full mx-auto my-8 text-center pb-36 px-8">
           <PaymentSuccess
-            paymentId={transactionId}
             amount={amount}
-            customerEmail={email}
             articleId={articleId}
+            customerEmail={email}
+            paymentId={transactionId}
           />
         </div>
       ) : (
@@ -192,6 +191,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   Card Information
                 </h2>
                 <CardElement
+                  className="p-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                   options={{
                     style: {
                       base: {
@@ -206,15 +206,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       },
                     },
                   }}
-                  className="p-3 border rounded-md focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
               </div>
               <Button
-                type="submit"
-                size="lg"
-                isLoading={processing}
-                disabled={!stripe || processing}
                 className="w-full mt-4 bg-customBlue text-white font-semibold text-xl"
+                disabled={!stripe || processing}
+                isLoading={processing}
+                size="lg"
+                type="submit"
               >
                 {processing ? "Processing..." : `Pay $${amount.toFixed(2)} USD`}
               </Button>

@@ -52,6 +52,7 @@ export type TPopulatedAuthor = {
   profilePhoto?: string;
   followers: string[];
 };
+
 export type TArticle = {
   _id: string;
   authorId: TPopulatedAuthor;
@@ -61,6 +62,7 @@ export type TArticle = {
   images?: string;
   upvotes: number;
   downvotes: number;
+  voteInfo: TVoteInfo[];
   comments: string[];
   isPremium: boolean;
   price: number;

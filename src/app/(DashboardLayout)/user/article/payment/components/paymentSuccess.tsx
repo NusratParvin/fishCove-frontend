@@ -7,7 +7,7 @@ import {
   Button,
   Divider,
 } from "@nextui-org/react";
-import { CheckCircle, ArrowRight, Download, Home } from "lucide-react";
+import { CheckCircle, ArrowRight, Home } from "lucide-react";
 import { Link } from "@nextui-org/react";
 
 interface PaymentSuccessProps {
@@ -57,20 +57,20 @@ export default function PaymentSuccess({
         <Divider />
         <CardFooter className="flex flex-row gap-2 py-4">
           <Button
+            as={Link}
             className="w-full text-customOrange"
             endContent={<ArrowRight size={16} />}
-            variant="light"
             href={`/user/article/${articleId}`}
-            as={Link}
+            variant="light"
           >
             Read Article
           </Button>
           <Button
+            as={Link}
             className="w-full"
             endContent={<Home size={16} />}
-            variant="light"
             href="/"
-            as={Link}
+            variant="light"
           >
             Homepage
           </Button>

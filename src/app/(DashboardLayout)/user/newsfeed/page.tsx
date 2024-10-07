@@ -260,6 +260,7 @@ import LoaderNewsfeed from "./components/loaderNewsfeed";
 
 import { useGetAllArticlesQuery } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
+import NoArticlesFound from "@/src/components/shared/noArticleFound";
 
 const Page = () => {
   const [articles, setArticles] = useState<TArticle[]>([]);
@@ -499,7 +500,7 @@ const Page = () => {
         </InfiniteScroll>
       ) : (
         <p className="text-center text-gray-500">
-          No articles found with the selected filters.
+          <NoArticlesFound />{" "}
         </p>
       )}
     </div>

@@ -11,7 +11,7 @@ const ModalButton = () => {
     <>
       <Link
         className="bg-highlight text-white text-base font-bold rounded-full text-center py-2"
-        href={"/user/create-post"}
+        href={"/user/create-article"}
       >
         Create Article
       </Link>
