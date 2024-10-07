@@ -2,14 +2,15 @@
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import React, { useState } from "react";
 
-import { TArticle } from "@/src/types";
+import ArticleCard from "../../newsfeed/components/articleCard";
+import LoaderNewsfeed from "../../newsfeed/components/loaderNewsfeed";
+import ErrorNewsfeed from "../../newsfeed/components/errorNewsfeed";
+
 import {
   useGetFollowingArticlesQuery,
   useGetMyArticlesQuery,
 } from "@/src/redux/features/articles/articlesApi";
-import ArticleCard from "../../newsfeed/components/articleCard";
-import LoaderNewsfeed from "../../newsfeed/components/loaderNewsfeed";
-import ErrorNewsfeed from "../../newsfeed/components/errorNewsfeed";
+import { TArticle } from "@/src/types";
 
 const ArticleTabs = () => {
   const [selected, setSelected] = useState("my-articles");
@@ -33,6 +34,7 @@ const ArticleTabs = () => {
     <div className="flex w-full flex-col mt-8 mb-16">
       <Tabs
         // className="border-gray-400 focus:border-gray-900"
+        fullWidth
         aria-label="Article Categories"
         classNames={{
           tabList:
@@ -42,11 +44,10 @@ const ArticleTabs = () => {
           tabContent:
             "group-data-[selected=true]:text-customBlue  font-semibold",
         }}
-        selectedKey={selected}
-        variant="underlined"
         color="default"
+        selectedKey={selected}
         size="md"
-        fullWidth
+        variant="underlined"
         onSelectionChange={(key) => setSelected(key.toString())}
       >
         {/* Tab for "My Articles" */}

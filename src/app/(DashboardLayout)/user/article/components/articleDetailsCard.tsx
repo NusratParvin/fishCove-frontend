@@ -8,12 +8,7 @@ import {
   Button,
   Chip,
 } from "@nextui-org/react";
-import {
-  ArrowUp,
-  ArrowDown,
-  MessagesSquare,
-  BadgeDollarSign,
-} from "lucide-react";
+import { ArrowUp, ArrowDown, MessagesSquare } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -36,7 +31,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
   useEffect(() => {
     if (article && article.authorId) {
       const alreadyFollowing = article?.authorId?.followers?.includes(
-        user?._id as string
+        user?._id as string,
       );
 
       setIsFollowing(alreadyFollowing || false);
@@ -85,7 +80,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
           {
             id: toastId,
             className: "text-green-500",
-          }
+          },
         );
       }
     } catch (error) {

@@ -3,18 +3,18 @@ import baseApi from "../../api/baseApi";
 export const paymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createPaymentIntent: builder.mutation({
-      query: (amount: number) => ({
+      query: ({
+        amount,
+        articleId,
+        authorId,
+      }: {
+        amount: number;
+        articleId: string;
+        authorId: string;
+      }) => ({
         url: "/payments/create-payment-intent",
         method: "POST",
-        body: { amount },
-      }),
-    }),
-
-    confirmPayment: builder.mutation({
-      query: ({ paymentIntentId, paymentMethodId }) => ({
-        url: "/payments/confirm-payment",
-        method: "POST",
-        body: { paymentIntentId, paymentMethodId },
+        body: { amount, articleId, authorId },
       }),
     }),
 
@@ -22,42 +22,17 @@ export const paymentApi = baseApi.injectEndpoints({
       query: (paymentData: {
         transactionId: string;
         amount: number;
-        bikeId: string;
+        articleId: string;
         userId: string;
-        startTime: string;
         email: string;
       }) => ({
-        url: "/rentals",
+        url: "/payments/confirm-payment",
         method: "POST",
-        body: paymentData,
-      }),
-    }),
-
-    saveRemainderPayment: builder.mutation({
-      query: ({
-        rentalId,
-        paymentData,
-      }: {
-        rentalId: string;
-        paymentData: {
-          transactionId: string;
-          amount: number;
-          bikeId: string;
-          userId: string;
-          email: string;
-        };
-      }) => ({
-        url: `/rentals/${rentalId}/payments`,
-        method: "PUT",
         body: paymentData,
       }),
     }),
   }),
 });
 
-export const {
-  useSavePaymentDataMutation,
-  useSaveRemainderPaymentMutation,
-  useCreatePaymentIntentMutation,
-  useConfirmPaymentMutation,
-} = paymentApi;
+export const { useSavePaymentDataMutation, useCreatePaymentIntentMutation } =
+  paymentApi;

@@ -13,12 +13,12 @@ import {
   ArrowDown,
   ChevronDown,
   ChevronUp,
-  BadgeDollarSign,
   MessagesSquare,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import fallbackImage from "@/src/assets/images/fallback.jpg";
 import { useVoteArticleMutation } from "@/src/redux/features/articles/articlesApi";
@@ -36,10 +36,11 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
 
   const [followUser] = useFollowUserMutation();
   const user = useAppSelector(useCurrentUser);
+  const router = useRouter();
 
   useEffect(() => {
     const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string
+      user?._id as string,
     );
 
     setIsFollowing(alreadyFollowing || false);
@@ -84,6 +85,17 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
       setIsFollowing((prev) => !prev);
       console.error("Failed to follow/unfollow:", error);
     }
+  };
+  const handleBuyNow = () => {
+    const paymentData = {
+      articleId: article._id,
+      authorId: article.authorId._id,
+      amount: article.price,
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify(paymentData));
+
+    router.push(`/user/article/payment?data=${encodedData}`);
   };
 
   return (
@@ -237,6 +249,7 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
               className="bg-customBlue text-white"
               size="sm"
               variant="flat"
+              onClick={() => handleBuyNow()}
             >
               Buy Now ${article.price.toFixed(2)}
             </Button>
