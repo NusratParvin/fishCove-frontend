@@ -36,7 +36,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
   useEffect(() => {
     if (article && article.authorId) {
       const alreadyFollowing = article?.authorId?.followers?.includes(
-        user?._id as string,
+        user?._id as string
       );
 
       setIsFollowing(alreadyFollowing || false);
@@ -85,7 +85,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
           {
             id: toastId,
             className: "text-green-500",
-          },
+          }
         );
       }
     } catch (error) {
@@ -96,6 +96,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
       console.error("Failed to follow/unfollow:", error);
     }
   };
+  // console.log(article);
 
   return (
     <div>
@@ -116,14 +117,16 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
                   <h3 className="text-base font-bold">
                     {article?.authorId?.name || "Anonymous"}
                   </h3>
-                  <Button
-                    className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
-                    color="primary"
-                    size="sm"
-                    onClick={handleFollow}
-                  >
-                    {isFollowing ? "Unfollow" : "Follow"}
-                  </Button>
+                  {user?._id !== article?.authorId?._id && (
+                    <Button
+                      className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
+                      color="primary"
+                      size="sm"
+                      onClick={handleFollow}
+                    >
+                      {isFollowing ? "Unfollow" : "Follow"}
+                    </Button>
+                  )}
                 </div>
                 <div className="flex items-center text-xs text-gray-500 mt-1">
                   <Chip
@@ -141,7 +144,9 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
             </div>
             <div className="flex items-start mr-2">
               {article?.isPremium ? (
-                <BadgeDollarSign className="text-yellow-500" size={22} />
+                <Chip color="warning" variant="flat">
+                  <strong>Premium</strong>
+                </Chip>
               ) : (
                 <Chip color="success" variant="flat">
                   <strong>Free</strong>
@@ -198,7 +203,7 @@ const ArticleDetailsCard = ({ articleInfo }: { articleInfo: TArticle }) => {
               }
               variant="light"
             >
-              {article?.comments?.length}
+              {article?.comments.length}
             </Button>
           </div>
 

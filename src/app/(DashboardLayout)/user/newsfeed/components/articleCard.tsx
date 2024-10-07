@@ -39,7 +39,7 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
 
   useEffect(() => {
     const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string,
+      user?._id as string
     );
 
     setIsFollowing(alreadyFollowing || false);
@@ -101,14 +101,16 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
                 <h3 className="text-base font-bold">
                   {authorId?.name || "Anonymous"}
                 </h3>
-                <Button
-                  className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
-                  color="primary"
-                  size="sm"
-                  onClick={handleFollow}
-                >
-                  {isFollowing ? "Unfollow" : "Follow"}
-                </Button>
+                {user?._id !== authorId?._id && (
+                  <Button
+                    className="mr-2 text-xs h-6 min-w-unit-16 bg-customBlue text-white"
+                    color="primary"
+                    size="sm"
+                    onClick={handleFollow}
+                  >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                  </Button>
+                )}
               </div>
               <div className="flex items-center text-xs text-gray-500 mt-1">
                 <Chip
@@ -125,26 +127,42 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
           {/* Toggle content visibility */}
           <div className="flex items-center gap-1">
             {article?.isPremium ? (
-              <BadgeDollarSign className="text-yellow-500" size={22} />
+              <Chip color="warning" variant="flat">
+                <strong>Premium</strong>
+              </Chip>
             ) : (
               <Chip color="success" variant="flat">
                 <strong>Free</strong>
               </Chip>
             )}
             {/* Lock icon with premium color */}
-            <Button
-              isIconOnly
-              className={`text-gray-500 mt-0 h-8 min-w-unit-6 transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-              variant="light"
-              onPress={toggleContent}
-            >
-              {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </Button>
+            {article?.isPremium ? (
+              <Link href="/">
+                <ChevronDown size={20} />
+              </Link>
+            ) : (
+              <Button
+                isIconOnly
+                className={`text-gray-500 mt-0 h-8 min-w-unit-6 transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+                variant="light"
+                onPress={toggleContent}
+              >
+                {isExpanded ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </Button>
+            )}
           </div>
         </div>
 
         <h2 className="text-base text-customOrange/80 font-semibold mb-2 underline">
-          <Link href={`/user/article/${article?._id}`}>{article.title}</Link>
+          {article?.isPremium ? (
+            <Link href={"/"}>{article.title}</Link>
+          ) : (
+            <Link href={`/user/article/${article?._id}`}>{article.title}</Link>
+          )}
         </h2>
 
         <div
