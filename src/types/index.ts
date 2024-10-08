@@ -44,6 +44,8 @@ export interface TUser {
   followers: string[];
   following: string[];
   articles: string[];
+  purchasedArticles: string[];
+  createdAt: string;
 }
 
 export type TPopulatedAuthor = {
@@ -65,6 +67,8 @@ export type TArticle = {
   voteInfo: TVoteInfo[];
   comments: string[];
   isPremium: boolean;
+  isPublish?: boolean;
+
   price: number;
   isDeleted: boolean;
   createdAt: string;
@@ -93,3 +97,16 @@ export interface TComment {
   createdAt: string;
   updatedAt: string;
 }
+
+export type TTransaction = {
+  _id?: string;
+  transactionId: string;
+  userId: string;
+  articleId: string;
+  amount: number;
+  email: string;
+  status: "completed" | "pending" | "failed";
+  authorId: string;
+  createdAt: string;
+  updatedAt?: string;
+};

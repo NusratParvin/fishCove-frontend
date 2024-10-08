@@ -180,6 +180,7 @@ const Page = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
+
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
 
@@ -195,7 +196,7 @@ const Page = () => {
   };
 
   const handleVotingFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setVotingOrder(e.target.value);
   };
@@ -224,34 +225,34 @@ const Page = () => {
           .includes(filters.searchQuery.toLowerCase()) ||
         article.content
           .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase())
+          .includes(filters.searchQuery.toLowerCase()),
     )
     .filter(
       (article) =>
         !filters.category ||
         filters.category === "All" ||
-        article.category === filters.category
+        article.category === filters.category,
     )
     .filter(
       (article) =>
         !filters.isPremium ||
         filters.isPremium === "All" ||
         (filters.isPremium === "Free" && article.isPremium === false) ||
-        (filters.isPremium === "Premium" && article.isPremium === true)
+        (filters.isPremium === "Premium" && article.isPremium === true),
     )
     .sort((a, b) =>
       sortOrder === "newest"
         ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         : sortOrder === "oldest"
           ? new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          : 0
+          : 0,
     )
     .sort((a, b) =>
       votingOrder === "upvotes"
         ? b.upvotes - a.upvotes
         : votingOrder === "downvotes"
           ? b.downvotes - a.downvotes
-          : 0
+          : 0,
     );
 
   return (
@@ -360,7 +361,11 @@ const Page = () => {
         ) : (
           <InfiniteScroll
             dataLength={filteredArticles.length}
-            next={loadMore}
+            endMessage={
+              <p className="text-center text-gray-500 my-4">
+                No more articles to load.
+              </p>
+            }
             hasMore={hasMore}
             loader={
               <div className="grid lg:grid-cols-2 grid-cols-1 gap-8">
@@ -369,11 +374,7 @@ const Page = () => {
                 ))}
               </div>
             }
-            endMessage={
-              <p className="text-center text-gray-500 my-4">
-                No more articles to load.
-              </p>
-            }
+            next={loadMore}
           >
             {/* Article Grid */}
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">

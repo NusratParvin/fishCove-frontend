@@ -48,7 +48,7 @@ const EditArticleForm: React.FC<EditArticleFormProps> = ({
   const [uploading, setUploading] = useState(false);
 
   const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
 
@@ -69,7 +69,7 @@ const EditArticleForm: React.FC<EditArticleFormProps> = ({
         {
           method: "POST",
           body: formData,
-        },
+        }
       );
       const data = await res.json();
 
@@ -120,6 +120,7 @@ const EditArticleForm: React.FC<EditArticleFormProps> = ({
           id: toastId,
           className: "text-green-500",
         });
+
         router.push("/user/newsfeed");
       }
     } catch (error) {

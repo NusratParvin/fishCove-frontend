@@ -1,32 +1,38 @@
-import React, { useState } from "react";
-import { Card, CardBody, Avatar, Button, Input } from "@nextui-org/react";
+"use client";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  Avatar,
+  Button,
+  Input,
+  Spinner,
+} from "@nextui-org/react";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useUpdateUserMutation } from "@/src/redux/features/user/userApi";
+import {
+  useGetUserInfoQuery,
+  useUpdateUserMutation,
+} from "@/src/redux/features/user/userApi";
 import avatarImage from "@/src/assets/images/team.png";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setUser, useCurrentToken } from "@/src/redux/features/auth/authSlice";
-
-interface UpdateProfileInfoProps {
-  user: any;
-  toggleEditMode: () => void;
-}
+import { useRouter } from "next/navigation";
 
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
-  user,
-  toggleEditMode,
-}) => {
-  const [profilePhoto, setProfilePhoto] = useState(
-    user?.profilePhoto || avatarImage
-  );
+const AdminEditProfile = () => {
+  const { data: userInfo, isLoading, error } = useGetUserInfoQuery(undefined);
+  const user = userInfo?.data;
+
+  const [profilePhoto, setProfilePhoto] = useState<string>();
   const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
   const currentToken = useAppSelector(useCurrentToken);
+  const router = useRouter();
 
   const {
     register,
@@ -35,16 +41,28 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: user?.name || "",
-      bio: user?.bio || "",
-      address: user?.address || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-      profilePhoto: user?.profilePhoto || "",
+      name: "",
+      bio: "",
+      address: "",
+      email: "",
+      phone: "",
+      profilePhoto: "",
     },
   });
 
   const [updateUser] = useUpdateUserMutation();
+
+  // Set form values when the user data is available
+  useEffect(() => {
+    if (user) {
+      setValue("name", user.name);
+      setValue("bio", user.bio || "");
+      setValue("address", user.address || "");
+      setValue("email", user.email);
+      setValue("phone", user.phone || "");
+      setProfilePhoto(user.profilePhoto || avatarImage);
+    }
+  }, [user, setValue]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,7 +70,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
     if (!file) return;
 
     const formData = new FormData();
-
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET as string);
 
@@ -68,7 +85,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
       const data = await res.json();
 
       setProfilePhoto(data.secure_url);
-
       setValue("profilePhoto", data.secure_url);
       setUploading(false);
       toast.success("Image uploaded successfully", {
@@ -98,11 +114,8 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
 
     if (Object.keys(updatedData).length === 0) {
       toast.info("No changes detected");
-
       return;
     }
-
-    console.log("Form data to update:", updatedData);
 
     try {
       const res = await updateUser(updatedData).unwrap();
@@ -111,15 +124,15 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
         toast.success("Profile updated successfully", {
           className: "text-green-500",
         });
-        // console.log(res.data);
+        console.log(res);
         dispatch(setUser({ user: res.data, token: currentToken }));
-
-        toggleEditMode();
+        router.push("/admin/dashboard");
       } else {
         throw new Error(res.message || "Update failed");
       }
     } catch (error: any) {
-      console.error("Failed to update profile:", error.message || error);
+      console.log(error);
+      console.error("Failed to update profile:", error);
 
       if (error.status === 409) {
         toast.error("Conflict: You cannot use the same email.", {
@@ -133,6 +146,22 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">Failed to load user information.</p>
+      </div>
+    );
+  }
+
   return (
     <Card className="w-full max-w-3xl mx-auto shadow-md" radius="none">
       {/* Background header with a gradient */}
@@ -142,7 +171,7 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
           <Avatar
             alt={`${user?.name}'s avatar`}
             className="absolute top-16 left-4 w-32 h-32 border-4 border-white z-10 cursor-pointer"
-            src={profilePhoto}
+            src={profilePhoto || ""}
           />
           <input
             accept="image/*"
@@ -192,8 +221,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
             {/* Bio */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
               <label className="text-right text-black text-sm" htmlFor="bio">
-                {" "}
-                {/* Added text-black */}
                 Bio
               </label>
               <Input
@@ -213,8 +240,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
                 className="text-right text-black text-sm"
                 htmlFor="address"
               >
-                {" "}
-                {/* Added text-black */}
                 Address
               </label>
               <Input
@@ -231,8 +256,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
             {/* Email */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
               <label className="text-right text-black text-sm" htmlFor="email">
-                {" "}
-                {/* Added text-black */}
                 Email
               </label>
               <Input
@@ -253,8 +276,6 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
             {/* Phone */}
             <div className="grid grid-cols-[100px_1fr] gap-4 items-center mb-4">
               <label className="text-right text-black text-sm" htmlFor="phone">
-                {" "}
-                {/* Added text-black */}
                 Phone
               </label>
               <Input
@@ -281,7 +302,11 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
         >
           Save
         </Button>
-        <Button color="default" variant="shadow" onClick={toggleEditMode}>
+        <Button
+          color="default"
+          variant="shadow"
+          onClick={() => window.history.back()}
+        >
           <X size={16} />
         </Button>
       </div>
@@ -289,4 +314,4 @@ const UpdateProfileInfo: React.FC<UpdateProfileInfoProps> = ({
   );
 };
 
-export default UpdateProfileInfo;
+export default AdminEditProfile;

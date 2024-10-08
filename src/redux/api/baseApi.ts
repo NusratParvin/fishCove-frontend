@@ -7,8 +7,9 @@ import envConfig from "@/src/config/envConfig";
 const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: envConfig.baseApi,
-    // baseUrl: "http://localhost:5000/api",
+    // baseUrl: envConfig.baseApi,
+    baseUrl: "https://fish-cove-backend.vercel.app/api/v1",
+    // baseUrl: "http://localhost:5000/api/v1",
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
@@ -20,7 +21,7 @@ const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["User", "Articles", "Authors", "Auth"],
+  tagTypes: ["User", "Articles", "Payments", "Auth"],
   endpoints: () => ({}),
 });
 

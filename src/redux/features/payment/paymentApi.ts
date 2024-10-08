@@ -2,6 +2,14 @@ import baseApi from "../../api/baseApi";
 
 export const paymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAllPayments: builder.query({
+      query: () => ({
+        url: "/payments",
+        method: "GET",
+      }),
+      providesTags: ["Payments"],
+    }),
+
     createPaymentIntent: builder.mutation({
       query: ({
         amount,
@@ -31,8 +39,20 @@ export const paymentApi = baseApi.injectEndpoints({
         body: paymentData,
       }),
     }),
+
+    deletePayment: builder.mutation({
+      query: (transactionId) => ({
+        url: `/payments/${transactionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Payments"],
+    }),
   }),
 });
 
-export const { useSavePaymentDataMutation, useCreatePaymentIntentMutation } =
-  paymentApi;
+export const {
+  useGetAllPaymentsQuery,
+  useSavePaymentDataMutation,
+  useCreatePaymentIntentMutation,
+  useDeletePaymentMutation,
+} = paymentApi;

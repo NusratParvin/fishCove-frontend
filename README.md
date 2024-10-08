@@ -1,54 +1,65 @@
-# Next.js & NextUI Template
+# FishCove Frontend
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+**FishCove** is a platform offering tips and stories on fish care. The frontend is built with a focus on user experience, featuring a dynamic news feed, article creation, and premium content access.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+[Live Demo](https://fishcove-client.vercel.app/)
 
-## Technologies Used
+## Features
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- **User Authentication**: Login and register with JWT-based authentication.
+- **Profile Management**: Users can update profiles and view their posts, followers, and following.
+- **Fish Care Articles**: Users can browse and read fish care tips and stories.
+- **Premium Content**: Users can access premium content after making secure payments.
+- **Article Creation & Editing**: Users can create, edit, and delete articles categorized as "Tip" or "Story."
+- **Upvote & Comment**: Users can upvote articles and comment on them.
+- **Payment Integration**: Stripe is integrated for secure payments to access premium content.
 
-## How to Use
+## Technology Stack
 
-### Use the template with create-next-app
+- **Framework**: Next.js (React)
+- **Styling**: Tailwind CSS
+- **State Management**: Redux Toolkit
+- **Animations**: Framer Motion
+- **Payment**: Stripe
 
-To create a new project based on this template using `create-next-app`, run the following command:
+## Setup & Installation
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/NusratParvin/fishCove-frontend
+   cd fishcove-frontend
+   ```
 
-### Install dependencies
+## Installation
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+### Install Dependencies
 
-```bash
+````bash
 npm install
-```
 
-### Run the development server
+
+## Add Environment Variables
+
+Create a `.env.local` file and add:
 
 ```bash
+NEXT_PUBLIC_API_URL=your_backend_api_url
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=your_stripe_public_key
+
+
+
 npm run dev
-```
+The application will run at http://localhost:3000.
 
-### Setup pnpm (optional)
+## Key Pages
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+* **Home Page**: Displays a news feed of articles.
+* **Login/Register**: User authentication forms.
+* **Profile Page**: View and edit user information.
+* **Article Page**: Detailed view of individual articles.
+* **Payment Page**: Process payments for premium content.
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
+## Deployment
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
-"# fishCove-frontend" 
+* **Deploy to Vercel**: Connect the repository to Vercel, add environment variables, and deploy.
+````

@@ -1,20 +1,21 @@
-import { TArticle } from "@/src/types";
 import Image from "next/image";
 import NextLink from "next/link";
 import { Chip } from "@nextui-org/react";
+
+import { TArticle } from "@/src/types";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useCurrentUser } from "@/src/redux/features/auth/authSlice";
 
 const GeneralArticleCard = ({ article }: { article: TArticle }) => {
   const user = useAppSelector(useCurrentUser);
-
-  const articleLink = user
-    ? article.isPremium
-      ? `/user/newsfeed`
-      : `/user/article/${article._id}`
-    : article.isPremium
-      ? `/login`
-      : `/articles/${article._id}`;
+  console.log(user);
+  const articleLink = article?.isPremium
+    ? user
+      ? user?.role === "USER"
+        ? `/user/newsfeed` // Regular user redirected if it's premium
+        : `/articles/${article._id}` // Admin or other roles can access the article
+      : `/login` // Non-logged-in users are redirected to the login page for premium content
+    : `/articles/${article._id}`; // Non-premium articles are accessible to everyone
 
   return (
     <div>
@@ -26,9 +27,9 @@ const GeneralArticleCard = ({ article }: { article: TArticle }) => {
         <NextLink passHref href={articleLink}>
           <div className="group relative block h-56 w-full shrink-0 self-start overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-24 md:w-24 lg:h-40 lg:w-40">
             <Image
+              fill
               alt={article.title}
               className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-              fill
               loading="lazy"
               src={article.images || "/fallback.jpg"}
             />
@@ -60,10 +61,10 @@ const GeneralArticleCard = ({ article }: { article: TArticle }) => {
 
           {/* Description (content snippet) */}
           <p
-            className="text-gray-500 text-sm"
             dangerouslySetInnerHTML={{
               __html: `${article.content?.substring(0, 200)}...`,
             }}
+            className="text-gray-500 text-sm"
           />
 
           {/* Read More Link */}

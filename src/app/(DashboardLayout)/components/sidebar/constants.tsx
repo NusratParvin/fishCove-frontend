@@ -1,4 +1,4 @@
-import { Home, User, Settings, Bookmark, Pen } from "lucide-react";
+import { Home, User, Settings, Bookmark, Pen, DollarSign } from "lucide-react";
 
 export const userLinks = [
   { href: "/user/newsfeed", label: "News Feed", icon: <Home size={16} /> },
@@ -26,13 +26,18 @@ export const adminLinks = [
     icon: <User size={16} />,
   },
   {
-    href: "/admin/manage-posts",
-    label: "Manage Posts",
+    href: "/admin/manage-articles",
+    label: "Manage Articles",
     icon: <Bookmark size={16} />,
   },
   {
-    href: "/admin/settings",
-    label: "Admin Settings",
+    href: "/admin/manage-payments",
+    label: "Manage Payments",
+    icon: <DollarSign size={16} />,
+  },
+  {
+    href: "/admin/edit-profile",
+    label: "Edit Profile",
     icon: <Settings size={16} />,
   },
 ];

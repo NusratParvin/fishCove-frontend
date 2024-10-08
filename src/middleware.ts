@@ -1,68 +1,49 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
-
+import jwtDecode from "jwt-decode"; // Assume you're using jwtDecode
 import { verifyToken } from "./lib/verifyToken";
-
-const AuthRoutes = ["/login", "/register"];
-
-type Role = keyof typeof roleBasedRoutes;
-
-const roleBasedRoutes = {
-  USER: [/^\/user/],
-  ADMIN: [/^\/admin/],
-};
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const accessToken = cookies().get("accessToken")?.value;
+
+  // Access cookies from the request in middleware
+  const accessToken = request.cookies.get("accessToken")?.value;
 
   if (!accessToken) {
-    if (AuthRoutes.includes(pathname)) {
-      return NextResponse.next();
+    // If no token, redirect to login page unless it's a public route
+    if (pathname === "/login" || pathname === "/register") {
+      return NextResponse.next(); // Allow access to login/register
     } else {
       return NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, request.url),
+        new URL(`/login?redirect=${pathname}`, request.url)
       );
     }
   }
 
-  let verifiedUser = null;
-
+  // Verify token (you can decode it to check user roles, etc.)
   try {
-    verifiedUser = verifyToken(accessToken) as any;
-  } catch (error) {
-    console.error("Token verification failed:", error);
+    const decodedToken: any = verifyToken(accessToken);
 
+    // Check user role, permissions, etc., based on the decoded token
+    if (decodedToken?.role === "ADMIN" && pathname.startsWith("/admin")) {
+      return NextResponse.next(); // Allow access to admin route
+    } else if (
+      decodedToken?.role === "USER" &&
+      pathname.startsWith("/profile")
+    ) {
+      return NextResponse.next(); // Allow access to user profile
+    } else {
+      // If role does not match, redirect to a not authorized page
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  } catch (error) {
+    // Token verification failed, redirect to login
     return NextResponse.redirect(
-      new URL(`/login?redirect=${pathname}`, request.url),
+      new URL(`/login?redirect=${pathname}`, request.url)
     );
   }
-
-  if (verifiedUser && AuthRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url)); // Redirect authenticated users to home if they try to access login/register
-  }
-
-  const role = verifiedUser?.role;
-
-  if (role && roleBasedRoutes[role as Role]) {
-    const routes = roleBasedRoutes[role as Role];
-
-    if (routes.some((route) => pathname.match(route))) {
-      return NextResponse.next(); // Allow access to the role-based route
-    }
-  }
-
-  return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {
-  matcher: [
-    "/user",
-    "/user/:page*",
-    "/admin",
-    "/admin/:page",
-    "/login",
-    "/register",
-  ],
+  matcher: ["/profile", "/admin", "/login", "/register"],
 };

@@ -314,7 +314,7 @@ const Page = () => {
   };
 
   const handleVotingFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setVotingOrder(e.target.value);
   };
@@ -351,34 +351,34 @@ const Page = () => {
           .includes(filters.searchQuery.toLowerCase()) ||
         article.content
           .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase())
+          .includes(filters.searchQuery.toLowerCase()),
     )
     .filter(
       (article) =>
         !filters.category ||
         filters.category === "All" ||
-        article.category === filters.category
+        article.category === filters.category,
     )
     .filter(
       (article) =>
         !filters.isPremium ||
         filters.isPremium === "All" ||
         (filters.isPremium === "Free" && article.isPremium === false) ||
-        (filters.isPremium === "Premium" && article.isPremium === true)
+        (filters.isPremium === "Premium" && article.isPremium === true),
     )
     .sort((a, b) =>
       sortOrder === "newest"
         ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         : sortOrder === "oldest"
           ? new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          : 0
+          : 0,
     )
     .sort((a, b) =>
       votingOrder === "upvotes"
         ? b.upvotes - a.upvotes
         : votingOrder === "downvotes"
           ? b.downvotes - a.downvotes
-          : 0
+          : 0,
     );
 
   return (

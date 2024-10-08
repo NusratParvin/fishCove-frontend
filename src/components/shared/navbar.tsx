@@ -51,9 +51,13 @@ export const Navbar = () => {
       toast.error("An error occurred during logout", { id: toastId });
     }
   };
-
+  console.log(isUser?.role);
   const handleDashboardClick = () => {
-    router.push("/user/newsfeed");
+    if (isUser?.role === "USER") {
+      router.push("/user/newsfeed");
+    } else {
+      router.push("/admin/dashboard");
+    }
   };
 
   return (
@@ -89,7 +93,7 @@ export const Navbar = () => {
                     <p className="font-semibold">{isUser.email}</p>
                   </DropdownItem>
                   <DropdownItem key="dashboard" onClick={handleDashboardClick}>
-                    My Profile
+                    My Dashboard
                   </DropdownItem>
                   <DropdownItem
                     key="logout"

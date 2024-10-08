@@ -11,6 +11,7 @@ import {
   useGetMyArticlesQuery,
 } from "@/src/redux/features/articles/articlesApi";
 import { TArticle } from "@/src/types";
+import NoArticlesFound from "@/src/components/shared/noArticleFound";
 
 const ArticleTabs = () => {
   const [selected, setSelected] = useState("my-articles");
@@ -56,6 +57,8 @@ const ArticleTabs = () => {
             <CardBody>
               {isLoadingMyArticles ? (
                 <LoaderNewsfeed />
+              ) : myArticles?.data?.length === 0 ? (
+                <NoArticlesFound />
               ) : errorMyArticles ? (
                 <ErrorNewsfeed />
               ) : (
@@ -73,7 +76,9 @@ const ArticleTabs = () => {
             <CardBody className="text-black/70">
               {isLoadingFollowingArticles ? (
                 <LoaderNewsfeed />
-              ) : errorMyArticles ? (
+              ) : followingArticles?.data?.length === 0 ? (
+                <NoArticlesFound />
+              ) : errorFollowingArticles ? (
                 <ErrorNewsfeed />
               ) : (
                 followingArticles?.data?.map((article: TArticle) => (

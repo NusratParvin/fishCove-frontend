@@ -49,6 +49,15 @@ export const articlesApi = baseApi.injectEndpoints({
       invalidatesTags: ["Articles"],
     }),
 
+    publishArticle: builder.mutation({
+      query: ({ articleId, publishData }) => ({
+        url: `/articles/${articleId}/publish`,
+        method: "PATCH",
+        body: publishData,
+      }),
+      invalidatesTags: ["Articles"],
+    }),
+
     deleteArticle: builder.mutation({
       query: (id) => ({
         url: `/articles/${id}`,
@@ -59,7 +68,7 @@ export const articlesApi = baseApi.injectEndpoints({
 
     getDashboardFeed: builder.query({
       query: () => "/articles/dashboard-feed",
-      providesTags: ["Articles", "Authors"],
+      providesTags: ["Articles"],
     }),
 
     voteArticle: builder.mutation({
@@ -80,6 +89,8 @@ export const {
   useGetFollowingArticlesQuery,
   useCreateArticleMutation,
   useUpdateArticleMutation,
+  usePublishArticleMutation,
+
   useDeleteArticleMutation,
   useGetDashboardFeedQuery,
   useVoteArticleMutation,

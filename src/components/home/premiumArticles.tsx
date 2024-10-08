@@ -26,27 +26,36 @@ const PremiumArticles = () => {
   // Filter the articles by isPremium true
   const filteredArticles =
     allArticles?.data?.filter((article: TArticle) => article.isPremium) || [];
+  const getArticleLink = (article: TArticle) => {
+    return article?.isPremium
+      ? user
+        ? user?.role === "USER"
+          ? `/user/newsfeed` // Regular user redirected if it's premium
+          : `/articles/${article._id}` // Admin or other roles can access the article
+        : `/login` // Non-logged-in users are redirected to the login page for premium content
+      : `/articles/${article._id}`; // Non-premium articles are accessible to everyone
+  };
 
   return (
-    <div className="container mx-auto my-24 py-8  ">
+    <div className="container mx-auto my-24 py-8">
       <h2 className="text-5xl font-semibold mb-16 text-customOrange text-center">
         Premium Articles For Your Fish
       </h2>
-      <div className="max-w-full gap-4 grid grid-cols-12 grid-rows-2 ">
+      <div className="max-w-full gap-4 grid grid-cols-12 grid-rows-2">
         {/* First Row: Two Cards */}
         {filteredArticles.slice(0, 2).map((article: TArticle) => (
           <Card
             key={article._id}
             className="col-span-12 sm:col-span-6 h-[300px] relative"
           >
-            <Link href={"/login"}>
+            <Link href={getArticleLink(article)}>
               <CardHeader className="absolute z-10 top-0 h-24 flex-col !items-start bg-black/60">
                 <p
-                  className={`text-xs py-0.5 px-3 mb-2 rounded-full font-semibold text-white uppercase  ${
+                  className={`text-xs py-0.5 px-3 mb-2 rounded-full font-semibold text-white uppercase ${
                     article.category === "Tip"
                       ? "bg-customBlue"
                       : "bg-customOrange"
-                  } `}
+                  }`}
                 >
                   {article.category}
                 </p>
@@ -87,14 +96,14 @@ const PremiumArticles = () => {
             key={article._id}
             className="col-span-12 sm:col-span-4 h-[300px] relative"
           >
-            <Link href={"/login"}>
+            <Link href={getArticleLink(article)}>
               <CardHeader className="absolute z-10 top-0 h-24 flex-col !items-start bg-black/60">
                 <p
-                  className={`text-xs py-0.5 px-3 mb-2 rounded-full font-semibold text-white uppercase  ${
+                  className={`text-xs py-0.5 px-3 mb-2 rounded-full font-semibold text-white uppercase ${
                     article.category === "Tip"
                       ? "bg-customBlue"
                       : "bg-customOrange"
-                  } `}
+                  }`}
                 >
                   {article.category}
                 </p>
