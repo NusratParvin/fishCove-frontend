@@ -277,16 +277,16 @@ const Page = () => {
     data: fetchedArticles,
     error,
     isLoading,
-    refetch, // Refetch function to trigger polling
+    refetch,
   } = useGetAllArticlesQuery(undefined);
 
   // Polling effect: Refetch data every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      refetch(); // Refetch data from the server
-    }, 10000); // Poll every 10 seconds
+      refetch();
+    }, 10000);
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [refetch]);
 
   // Update state when articles are fetched
@@ -314,7 +314,7 @@ const Page = () => {
   };
 
   const handleVotingFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setVotingOrder(e.target.value);
   };
@@ -329,7 +329,6 @@ const Page = () => {
     setVotingOrder("");
   };
 
-  // Infinite Scroll Load More
   const loadMore = () => {
     setPage((prevPage) => prevPage + 1);
   };
@@ -352,34 +351,34 @@ const Page = () => {
           .includes(filters.searchQuery.toLowerCase()) ||
         article.content
           .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase()),
+          .includes(filters.searchQuery.toLowerCase())
     )
     .filter(
       (article) =>
         !filters.category ||
         filters.category === "All" ||
-        article.category === filters.category,
+        article.category === filters.category
     )
     .filter(
       (article) =>
         !filters.isPremium ||
         filters.isPremium === "All" ||
         (filters.isPremium === "Free" && article.isPremium === false) ||
-        (filters.isPremium === "Premium" && article.isPremium === true),
+        (filters.isPremium === "Premium" && article.isPremium === true)
     )
     .sort((a, b) =>
       sortOrder === "newest"
         ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         : sortOrder === "oldest"
           ? new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          : 0,
+          : 0
     )
     .sort((a, b) =>
       votingOrder === "upvotes"
         ? b.upvotes - a.upvotes
         : votingOrder === "downvotes"
           ? b.downvotes - a.downvotes
-          : 0,
+          : 0
     );
 
   return (

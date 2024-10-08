@@ -39,12 +39,12 @@ export default function RedditPost() {
         </Chip>
         <p className="text-sm mb-3">
           This subfloor looks impossible to get up. I hired some guys to demo my
-          bathroom "down to the subfloor" but they bailed here.
+          bathroom down to the subfloor but they bailed here.
         </p>
         <p className="text-sm mb-3">
           Looks like cement leveler of some kind, with metal sheeting in
-          places!? I'm not sure what that lone piece of plywood is impossibly
-          attached to but I'm afraid to cut into it.
+          places!? Im not sure what that lone piece of plywood is impossibly
+          attached to but Im afraid to cut into it.
         </p>
         <Image
           alt="Dilapidated room with exposed subfloor"

@@ -45,12 +45,12 @@ const ArticleCard = ({ article }: { article: TArticle }) => {
 
   // Check if the article is purchased by the user
   const hasPurchased = user?.purchasedArticles?.some(
-    (purchasedArticle: string) => purchasedArticle === article._id
+    (purchasedArticle: string) => purchasedArticle === article._id,
   );
 
   useEffect(() => {
     const alreadyFollowing = article?.authorId?.followers?.includes(
-      user?._id as string
+      user?._id as string,
     );
 
     setIsFollowing(alreadyFollowing || false);

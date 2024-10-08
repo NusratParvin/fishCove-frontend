@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Banner />
-      <div className="md:w-10/12 w-full mx-auto my-24">
+      <div className="  md:w-10/12 w-full mx-auto my-24">
         <Hero />
         <Articles />
         <FishInfo />

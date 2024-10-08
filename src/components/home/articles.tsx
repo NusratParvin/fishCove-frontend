@@ -1,79 +1,47 @@
 "use client";
-import React from "react";
 import Link from "next/link";
+
+import GeneralLoader from "../shared/generalLoader";
 
 import ArticleCard from "./articleCard";
 
-import image1 from "@/src/assets/images/24331527_4800_2_09.jpg"; // Example image
-
-// Mock data structured similarly to your MongoDB schema
-const articles = [
-  {
-    _id: "67015d61328dbbe36241d893",
-    title: "Essential Tips for Maintaining Aquarium Water Quality",
-    authorId: { name: "Aquatic Experts" }, // Adjusted to match MongoDB structure
-    createdAt: "2024-10-05T15:38:09.246Z", // Simulating MongoDB date format
-    category: "Fish Care",
-    images: image1,
-  },
-  {
-    _id: "67015d61328dbbe36241d894",
-    title: "Understanding Betta Fish Behavior and Needs",
-    authorId: { name: "PetPlace Staff" },
-    createdAt: "2024-10-12T15:38:09.246Z",
-    category: "Fish Health",
-    images: image1,
-  },
-  {
-    _id: "67015d61328dbbe36241d895",
-    title: "Recognizing Signs of Stress in Aquarium Fish",
-    authorId: { name: "Bennett Glace" },
-    createdAt: "2024-10-14T15:38:09.246Z",
-    category: "Fish Health",
-    images: image1,
-  },
-  {
-    _id: "67015d61328dbbe36241d896",
-    title: "The Importance of Regular Tank Maintenance",
-    authorId: { name: "Richard Rowlands" },
-    createdAt: "2024-10-18T15:38:09.246Z",
-    category: "Fish Care",
-    images: image1,
-  },
-  {
-    _id: "67015d61328dbbe36241d897",
-    title: "Feeding Your Fish: What You Need to Know",
-    authorId: { name: "Aquatic Nutritionists" },
-    createdAt: "2024-10-20T15:38:09.246Z",
-    category: "Fish Nutrition",
-    images: image1,
-  },
-  {
-    _id: "67015d61328dbbe36241d898",
-    title: "Creating a Balanced Aquarium Diet",
-    authorId: { name: "Dr. John Doe" },
-    createdAt: "2024-10-22T15:38:09.246Z",
-    category: "Fish Nutrition",
-    images: image1,
-  },
-];
+import { useGetAllArticlesQuery } from "@/src/redux/features/articles/articlesApi";
+import { TArticle } from "@/src/types";
+import ErrorNewsfeed from "@/src/app/(DashboardLayout)/user/newsfeed/components/errorNewsfeed";
 
 const Articles = () => {
+  const {
+    data: allArticles,
+    isLoading,
+    error,
+  } = useGetAllArticlesQuery(undefined);
+
+  if (isLoading) return <GeneralLoader />;
+  if (error) return <ErrorNewsfeed />;
+
+  // Filter the articles by isPremium false
+  const filteredArticles =
+    allArticles?.data?.filter((article: TArticle) => !article.isPremium) || [];
+
   return (
     <div className="container mx-auto mb-40 mt-16 py-8">
-      <div className="border-b mb-12 flex justify-between text-sm ">
-        <div className="text-customOrange flex items-center pb-2 pr-2 border-b border-customOrange  ">
+      <div className="border-b mb-12 flex justify-between text-sm">
+        <div className="text-customOrange flex items-center pb-2 pr-2 border-b border-customOrange">
           <Link className="font-semibold inline-block text-4xl" href="#">
-            Articles on Fish Care and Health
+            Free Articles on Fish Care , Health & Stories
           </Link>
         </div>
         <Link href="#">See All</Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {articles.map((article) => (
-          <ArticleCard key={article._id} article={article} />
-        ))}
+        {filteredArticles.length > 0 ? (
+          filteredArticles.map((article: TArticle) => (
+            <ArticleCard key={article._id} article={article} />
+          ))
+        ) : (
+          <p>No free articles available</p>
+        )}
       </div>
     </div>
   );

@@ -26,16 +26,18 @@ import {
 import Image from "next/image";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { toast } from "sonner"; // Import Sonner toast
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+import EditArticleForm from "./editArticle";
+
 import fallbackImage from "@/src/assets/images/fallback.jpg";
 import { TArticle } from "@/src/types";
-import { useRouter } from "next/navigation";
 import {
   useVoteArticleMutation,
   useGetMyArticlesQuery,
   useDeleteArticleMutation,
 } from "@/src/redux/features/articles/articlesApi";
-import EditArticleForm from "./editArticle";
 
 const ArticleCardManage = ({ article }: { article: TArticle }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,10 +65,10 @@ const ArticleCardManage = ({ article }: { article: TArticle }) => {
   const handleDelete = async () => {
     try {
       await deleteArticle(article._id).unwrap();
-      toast.success("Article deleted successfully!"); // Show success toast
-      refetch(); // Refetch articles after deletion
+      toast.success("Article deleted successfully!");
+      refetch();
     } catch (error) {
-      toast.error("Failed to delete article. Please try again."); // Show error toast
+      toast.error("Failed to delete article. Please try again.");
       console.error("Failed to delete article:", error);
     }
   };
@@ -78,7 +80,7 @@ const ArticleCardManage = ({ article }: { article: TArticle }) => {
         voteType: "upvote",
       }).unwrap();
       refetch();
-      toast.success("Article upvoted!"); // Show success toast for upvote
+      toast.success("Article upvoted!");
     } catch (error) {
       toast.error("Failed to upvote article.");
       console.error("Failed to upvote:", error);
@@ -92,7 +94,7 @@ const ArticleCardManage = ({ article }: { article: TArticle }) => {
         voteType: "downvote",
       }).unwrap();
       refetch();
-      toast.success("Article downvoted!"); // Show success toast for downvote
+      toast.success("Article downvoted!");
     } catch (error) {
       toast.error("Failed to downvote article.");
       console.error("Failed to downvote:", error);
@@ -136,21 +138,20 @@ const ArticleCardManage = ({ article }: { article: TArticle }) => {
               </div>
             </div>
 
-            {/* Pen, Trash, and Chevron */}
             <div className="flex items-center gap-2">
               <Button
                 isIconOnly
-                variant="light"
                 className="text-gray-500"
+                variant="light"
                 onClick={handleEdit}
               >
                 <Edit size={14} />
               </Button>
               <Button
                 isIconOnly
-                variant="light"
                 className="text-red-500"
-                onClick={onOpen} // Open the modal when clicked
+                variant="light"
+                onClick={onOpen}
               >
                 <Trash size={14} />
               </Button>
