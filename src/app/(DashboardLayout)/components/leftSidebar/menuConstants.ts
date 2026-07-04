@@ -16,6 +16,7 @@ import {
   LucideIcon,
   Search,
   MessageSquare,
+  ShieldCheck,
 } from "lucide-react";
 
 export interface NavItem {
@@ -53,6 +54,11 @@ export const adminLinks: NavItem[] = [
   },
   { href: "/admin/vets", label: "Vets", icon: Building2 },
   { href: "/admin/lost-found", label: "Lost & Found", icon: Search },
+  {
+    href: "/admin/insurance-providers",
+    label: "Insurance Providers",
+    icon: ShieldCheck,
+  },
 
   {
     href: "/admin/manage-users",

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
-import { Button, Skeleton, useDisclosure } from "@heroui/react";
+import { useState, useMemo } from "react";
+import { Button, Skeleton } from "@heroui/react";
 import {
   CheckCircle,
   PawPrint,

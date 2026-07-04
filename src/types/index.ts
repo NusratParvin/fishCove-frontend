@@ -377,7 +377,15 @@ export const INSURANCE_BADGES = [
   "budgetPick",
 ] as const;
 
-export const PET_TYPES = ["dog", "cat", "bird", "rabbit", "other"] as const;
+export const PET_TYPES = [
+  "dog",
+  "cat",
+  "bird",
+  "rabbit",
+  "fish",
+  "reptile",
+  "other",
+] as const;
 
 export type TCoverageFlag = (typeof COVERAGE_TYPES)[number];
 export type TInsuranceBadge = (typeof INSURANCE_BADGES)[number];
@@ -525,6 +533,7 @@ export const LF_SPECIES = [
   "dog",
   "cat",
   "bird",
+  "fish",
   "rabbit",
   "reptile",
   "other",

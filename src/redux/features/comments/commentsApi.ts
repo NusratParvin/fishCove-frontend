@@ -86,7 +86,6 @@ export const commentsApi = baseApi.injectEndpoints({
     }),
 
     //   admin: all comments with filters
-    // usage: useGetAllCommentsForAdminQuery({ targetType: "LostFound", isSighting: true })
 
     getCommentStats: builder.query({
       query: () => ({ url: "/comments/stats", method: "GET" }),

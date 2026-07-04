@@ -61,7 +61,6 @@ export default function CommentsTable({
   const [restoreComment] = useRestoreCommentMutation();
   const [markHelpfulLead] = useMarkHelpfulLeadMutation();
 
-  // ✅ Track loading state per comment
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const handleDelete = async (commentId: string) => {

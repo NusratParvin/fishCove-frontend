@@ -11,9 +11,7 @@ import {
 
 export const insuranceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // ─────────────────────────────────────────
     // Providers
-    // ─────────────────────────────────────────
     getAllInsuranceProviders: builder.query<TInsuranceProvider[], void>({
       query: () => "/insurance",
       providesTags: ["Insurance"],
@@ -81,6 +79,20 @@ export const insuranceApi = baseApi.injectEndpoints({
       transformResponse: (response: TApiResponse<TAIRecommendationResult>) =>
         response.data,
     }),
+
+    getInsuranceDashboardStats: builder.query({
+      query: () => "/insurance/stats/dashboard",
+      providesTags: ["Insurance"],
+    }),
+    getInsuranceStats: builder.query({
+      query: () => "/insurance/stats",
+      providesTags: ["Insurance"],
+    }),
+
+    getProvidersForAdmin: builder.query({
+      query: () => "/insurance/admin",
+      providesTags: ["Insurance"],
+    }),
   }),
 });
 
@@ -92,4 +104,8 @@ export const {
   useDeleteInsuranceProviderMutation,
 
   useGetInsuranceRecommendationMutation,
+
+  useGetInsuranceDashboardStatsQuery,
+  useGetInsuranceStatsQuery,
+  useGetProvidersForAdminQuery,
 } = insuranceApi;
