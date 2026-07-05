@@ -62,7 +62,7 @@ export default function InsuranceCharts() {
             </p>
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-            <div className="h-full min-h-[280px]">
+            <div className="h-full  ">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={stats.coverageDistribution}

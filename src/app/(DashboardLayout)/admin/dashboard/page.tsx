@@ -38,6 +38,7 @@ import { formatEmirate } from "../vets/components/utils";
 import { useGetVetStatsQuery } from "@/src/redux/features/vets/vetsApi";
 import InsuranceDashboard from "./component/insuranceProviders";
 import InsuranceProvidersCard from "./component/insuranceProviders";
+import UsersDashboardCard from "./component/userDashboardCard";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -466,6 +467,7 @@ export default function AdminDashboard() {
 
       {/* insurance */}
       <InsuranceProvidersCard />
+      <UsersDashboardCard />
 
       {/* Recent Transactions */}
       <div className={`${cardClass} p-4`}>

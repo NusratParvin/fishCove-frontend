@@ -31,14 +31,15 @@ export default function page() {
     try {
       await updateProvider({ id, body: formData }).unwrap();
       toast.success("Insurance provider updated successfully!");
-      router.push("/admin/insurance");
+      router.push("/admin/insurance-providers");
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update provider");
     }
   };
 
-  const handleEditClick = () => router.push(`/admin/insurance/${id}?mode=edit`);
-  const handleBack = () => router.push(`/admin/insurance`);
+  const handleEditClick = () =>
+    router.push(`/admin/insurance-providers/${id}?mode=edit`);
+  const handleBack = () => router.push(`/admin/insurance-providers`);
 
   if (isLoadingProvider) {
     return (
