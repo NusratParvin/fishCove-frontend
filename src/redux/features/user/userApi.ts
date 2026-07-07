@@ -53,7 +53,7 @@ const userApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    promoteUserToAdmin: builder.mutation({
+    changeRoleAdmin: builder.mutation({
       query: ({ userId, role }) => ({
         url: `/users/${userId}`,
         method: "PUT",
@@ -105,7 +105,7 @@ export const {
   useUpdateUserMutation,
   useGetAllUsersQuery,
   useDeleteUserMutation,
-  usePromoteUserToAdminMutation,
+  useChangeRoleAdminMutation,
   useFollowUserMutation,
   useGetMostFollowedAuthorsQuery,
   useGetSingleUserForAdminQuery,

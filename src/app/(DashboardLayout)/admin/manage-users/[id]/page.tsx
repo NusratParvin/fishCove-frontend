@@ -11,7 +11,10 @@ import {
   getEmirateColor,
   capitalize,
 } from "../components/usersUtils";
-import { useUpdateUserMutation } from "@/src/redux/features/user/userApi";
+import {
+  useGetSingleUserForAdminQuery,
+  useChangeRoleAdminMutation,
+} from "@/src/redux/features/user/userApi";
 
 const ROLES = ["USER", "ADMIN"];
 
@@ -25,18 +28,19 @@ export default function UserDetailsPage() {
 
   const { data, isLoading, isError } = useGetSingleUserForAdminQuery(id);
   const user = data?.data;
-  const [updateRole, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [updateRole, { isLoading: isUpdating }] = useChangeRoleAdminMutation();
   const [selectedRole, setSelectedRole] = useState<string>("");
 
   const handleBack = () => router.push("/admin/users");
-  const handleEditClick = () => router.push(`/admin/users/${id}?mode=edit`);
+  const handleEditClick = () =>
+    router.push(`/admin/manage-users/${id}?mode=edit`);
 
   const handleSaveRole = async () => {
     if (!selectedRole) return;
     try {
-      await updateRole({ id, role: selectedRole }).unwrap();
+      await updateRole({ userId: id, role: selectedRole }).unwrap();
       toast.success("User role updated successfully!");
-      router.push("/admin/users");
+      router.push("/admin/manage-users");
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update role");
     }
