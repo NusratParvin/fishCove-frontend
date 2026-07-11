@@ -36,6 +36,8 @@ const baseApi = createApi({
     "LostFound",
     "Comments",
     "Notifications",
+    "UserPosts",
+    "Feed",
   ],
   endpoints: () => ({}),
 });
