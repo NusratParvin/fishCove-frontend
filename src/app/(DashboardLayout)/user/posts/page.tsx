@@ -18,24 +18,26 @@ export default function HomeFeed() {
   const currentUser = useAppSelector(useCurrentUser);
   const { data: myPets } = useGetMyPetsQuery(undefined);
   const pets = myPets?.data ?? myPets ?? [];
-  if (!currentUser) return null;
 
   const [page, setPage] = useState(1);
   const [allPosts, setAllPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const { ref: sentinelRef, inView } = useInView();
 
-  const { data, isFetching, isLoading } = useGetFeedQuery({ page, limit: 15 });
+  const { currentData, isFetching, isLoading } = useGetFeedQuery({
+    page,
+    limit: 2,
+  });
   const [reactToPost] = useReactToPostMutation();
 
   // Append each new page's results rather than replacing — same
   // accumulation pattern as Vet Finder's infinite scroll.
   useEffect(() => {
-    if (!data) return;
-    const incoming = data.data ?? data; // adjust to match your sendResponse envelope
+    if (!currentData) return;
+    const incoming = currentData.data ?? currentData; // adjust to match your sendResponse envelope
     setAllPosts((prev) => (page === 1 ? incoming : [...prev, ...incoming]));
-    if (incoming.length < 15) setHasMore(false);
-  }, [data, page]);
+    if (incoming.length < 2) setHasMore(false);
+  }, [currentData, page]);
 
   useEffect(() => {
     if (inView && hasMore && !isFetching) {
@@ -43,9 +45,35 @@ export default function HomeFeed() {
     }
   }, [inView, hasMore, isFetching]);
 
-  const handleReact = async (postId: string, reaction: string) => {
+  // All hooks are above this line — safe to conditionally return now.
+  if (!currentUser) return null;
+
+  const handleReact = async (postId: string, reactionType: string) => {
     try {
-      await reactToPost({ postId, reaction }).unwrap();
+      const res = await reactToPost({ postId, reactionType }).unwrap();
+      const { action, reactionType: newReaction } = res.data ?? res;
+
+      // Patch just this one post locally instead of refetching the whole
+      // feed (which would duplicate posts due to the accumulation pattern above).
+      setAllPosts((prev) =>
+        prev.map((p) => {
+          if (p._id !== postId) return p;
+
+          const summary = { ...p.reactionSummary };
+          const oldReaction = p.myReaction;
+
+          if (action === "added") {
+            summary[newReaction] = (summary[newReaction] ?? 0) + 1;
+          } else if (action === "removed") {
+            summary[oldReaction] = Math.max((summary[oldReaction] ?? 1) - 1, 0);
+          } else if (action === "changed") {
+            summary[oldReaction] = Math.max((summary[oldReaction] ?? 1) - 1, 0);
+            summary[newReaction] = (summary[newReaction] ?? 0) + 1;
+          }
+
+          return { ...p, reactionSummary: summary, myReaction: newReaction };
+        }),
+      );
     } catch {
       toast.error("Couldn't react — try again.");
     }

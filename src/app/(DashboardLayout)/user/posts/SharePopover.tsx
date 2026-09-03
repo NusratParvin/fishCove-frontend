@@ -8,6 +8,8 @@ import {
   Button,
   Textarea,
 } from "@heroui/react";
+import { useSharePostMutation } from "@/src/redux/features/posts/postsApi";
+
 import { Share2 } from "lucide-react";
 import { toast } from "sonner";
 

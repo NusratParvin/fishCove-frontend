@@ -1,11 +1,16 @@
 import baseApi from "../../api/baseApi";
 
+type TShareArg = {
+  refId: string;
+  refType: "Article" | "Post";
+  caption?: string;
+};
+
 export const postsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Regular post creation — no 'type' field sent, backend infers it
-    createPost: builder.mutation({
+    createPost: builder.mutation<any, any>({
       query: (payload) => {
-        console.log(payload);
+        // console.log(payload);
         return {
           url: "/posts",
           method: "POST",
@@ -15,12 +20,8 @@ export const postsApi = baseApi.injectEndpoints({
       invalidatesTags: ["Feed", "UserPosts"],
     }),
 
-    sharePost: builder.mutation({
-      query: (payload: {
-        refId: string;
-        refType: "Article" | "Post";
-        caption?: string;
-      }) => ({
+    sharePost: builder.mutation<any, TShareArg>({
+      query: (payload) => ({
         url: "/posts/share",
         method: "POST",
         body: payload,
@@ -28,32 +29,33 @@ export const postsApi = baseApi.injectEndpoints({
       invalidatesTags: ["Feed", "UserPosts"],
     }),
 
-    getFeed: builder.query({
-      query: ({ page = 1, limit = 15 } = {}) =>
-        `/posts/feed?page=${page}&limit=${limit}`,
+    getFeed: builder.query<any, { page?: number; limit?: number } | void>({
+      query: (arg) => {
+        const page = arg?.page ?? 1;
+        const limit = arg?.limit ?? 15;
+        return `/posts/feed?page=${page}&limit=${limit}`;
+      },
       providesTags: ["Feed"],
     }),
 
-    getUserPosts: builder.query({
-      query: (userId: string) => `/posts/user/${userId}`,
+    getUserPosts: builder.query<any, string>({
+      query: (userId) => `/posts/user/${userId}`,
       providesTags: ["UserPosts"],
     }),
 
-    // NOTE: backend endpoint for this doesn't exist yet — depends on whether
-    // you go with a direct $inc on Post.reactionSummary, or generalize the
-    // Reaction collection like you did for Comments (targetType/targetId).
-    // Wiring the frontend now either way; swap the url if needed.
-    reactToPost: builder.mutation({
-      query: ({ postId, reaction }: { postId: string; reaction: string }) => ({
+    reactToPost: builder.mutation<
+      any,
+      { postId: string; reactionType: string }
+    >({
+      query: ({ postId, reactionType }) => ({
         url: `/posts/${postId}/react`,
         method: "POST",
-        body: { reaction },
+        body: { reactionType },
       }),
-      invalidatesTags: ["Feed", "UserPosts"],
     }),
 
-    updatePost: builder.mutation({
-      query: ({ id, ...body }: { id: string; caption?: string }) => ({
+    updatePost: builder.mutation<any, { id: string; caption?: string }>({
+      query: ({ id, ...body }) => ({
         url: `/posts/${id}`,
         method: "PATCH",
         body,
@@ -61,8 +63,8 @@ export const postsApi = baseApi.injectEndpoints({
       invalidatesTags: ["Feed", "UserPosts"],
     }),
 
-    deletePost: builder.mutation({
-      query: (id: string) => ({
+    deletePost: builder.mutation<any, string>({
+      query: (id) => ({
         url: `/posts/${id}`,
         method: "DELETE",
       }),
