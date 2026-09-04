@@ -6,6 +6,10 @@ type TShareArg = {
   caption?: string;
 };
 
+type TFeedArg = {
+  limit: number;
+};
+
 export const postsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createPost: builder.mutation<any, any>({
@@ -29,14 +33,71 @@ export const postsApi = baseApi.injectEndpoints({
       invalidatesTags: ["Feed", "UserPosts"],
     }),
 
-    getFeed: builder.query<any, { page?: number; limit?: number } | void>({
-      query: (arg) => {
-        const page = arg?.page ?? 1;
-        const limit = arg?.limit ?? 15;
-        return `/posts/feed?page=${page}&limit=${limit}`;
+    //   getFeed: builder.infiniteQuery({
+    //     infiniteQueryOptions: {
+    //       initialPageParam: 0,
+    //       getNextPageParam: (lastPage, allPages, lastPageParam) =>
+    //         lastPageParam + 1,
+    //       getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+    //         return firstPageParam > 0 ? firstPageParam - 1 : undefined
+    //       },
+    //     },
+    //     query({ pageParam }) {
+    //       return `https://example.com/listItems?page=${pageParam}`
+    //     },
+    //   }),
+    // }),
+
+    getFeed: builder.infiniteQuery<any, TFeedArg, number>({
+      infiniteQueryOptions: {
+        // Your existing API starts at page 1
+        initialPageParam: 1,
+
+        getNextPageParam: (
+          lastPage,
+          _allPages,
+          lastPageParam,
+          _allPageParams,
+          queryArg,
+        ) => {
+          // Supports either:
+          //
+          // { data: [...] }
+          //
+          // or:
+          //
+          // [...]
+
+          const posts = Array.isArray(lastPage)
+            ? lastPage
+            : (lastPage?.data ?? []);
+
+          // If backend returned fewer than limit,
+          // we reached the final page.
+          if (posts.length < queryArg.limit) {
+            return undefined;
+          }
+
+          return lastPageParam + 1;
+        },
       },
+
+      query: ({ queryArg, pageParam }) => ({
+        url: `/posts/feed?page=${pageParam}&limit=${queryArg.limit}`,
+        method: "GET",
+      }),
+
       providesTags: ["Feed"],
     }),
+
+    // getFeed: builder.query<any, { page?: number; limit?: number } | void>({
+    //   query: (arg) => {
+    //     const page = arg?.page ?? 1;
+    //     const limit = arg?.limit ?? 15;
+    //     return `/posts/feed?page=${page}&limit=${limit}`;
+    //   },
+    //   providesTags: ["Feed"],
+    // }),
 
     getUserPosts: builder.query<any, string>({
       query: (userId) => `/posts/user/${userId}`,
@@ -76,7 +137,9 @@ export const postsApi = baseApi.injectEndpoints({
 export const {
   useCreatePostMutation,
   useSharePostMutation,
-  useGetFeedQuery,
+  // useGetFeedQuery,
+
+  useGetFeedInfiniteQuery,
   useGetUserPostsQuery,
   useReactToPostMutation,
   useUpdatePostMutation,
